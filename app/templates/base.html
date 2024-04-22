@@ -1,0 +1,28 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<header>
+    <img src="{% static 'images/manatee.png' %}" class="logo">
+    <nav>
+        <ul class="nav_links">
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contacts</a></li>
+        </ul>
+    </nav>
+    <a href="#" class="try_btn"><button>Try XXX</button></a>
+</header>
+
+{% block content %} {% endblock content %}
+
+<h1>footer</h1>
+
+</body>
+</html>

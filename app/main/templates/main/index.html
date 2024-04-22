@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+{#    <link rel="stylesheet" href="{% static 'css/index.css' %}">#}
+    <script src="{% static 'js/index.js' %}" defer></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.css" integrity="sha512-7uSoC3grlnRktCWoO4LjHMjotq8gf9XDFQerPuaph+cqR7JC9XKGdvN+UwZMC14aAaBDItdRj3DcSDs4kMWUgg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.js" integrity="sha512-9e9rr82F9BPzG81+6UrwWLFj8ZLf59jnuIA/tIf8dEGoQVu7l5qvr02G/BiAabsFOYrIUTMslVN+iDYuszftVQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+{#    <div id="dropZone">#}
+{#      <form action="/file-upload" class="dropzone" id="my-great-dropzone"></form>#}
+{#    </div>#}
+
+    <br>
+    <div id="dropZone">
+        <form action="{% url 'index' %}" class="dropzone" id="my-great-dropzone" method="POST" enctype="multipart/form-data" >
+            {% csrf_token %}
+            {{ form }}
+            <p><button type="submit">Send</button></p>
+        </form>
+    </div>
+    <br>
+
+
+    <center>
+        <img src="{% static 'images/manatee.png' %}">
+    </center>
+
+{% endblock content %}

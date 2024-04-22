@@ -1,0 +1,13 @@
+.idea
+.vscode
+.pylintrc
+
+venv/
+
+__pycache__/
+
+app/main/migrations/
+app/media/uploads/
+app/number_plate_recognition/assets/
+
+db.sqlite3

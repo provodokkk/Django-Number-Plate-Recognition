@@ -3,271 +3,347 @@ import ast
 import cv2
 import numpy as np
 import pandas as pd
+import math
+
+from typing import List, Dict, Tuple, Any, Optional
 
 
-def add_license_plate_overlay(frame: np.ndarray, license_crop: np.ndarray,
-                              license_plate_number: str, license_plate_bbox: str) -> None:
-    """
-    Add license plate overlay to a frame.
+class LicensePlateProcessor:
+    """A class to process license plate data and overlay onto frames."""
+    def __init__(self, results: pd.DataFrame, *, cap: Optional[cv2.VideoCapture] = None,
+                 frame: Optional[np.ndarray] = None) -> None:
+        """
+        Initializes LicensePlateProcessor.
 
-    Args:
-        frame: Input frame to which the overlay will be added.
-        license_crop: Cropped license plate image.
-        license_plate_number: License plate number.
-        license_plate_bbox: Bounding box coordinates of the license plate in string format.
+        Args:
+            results: DataFrame containing license plate data.
+            cap: VideoCapture object for reading frames.
+            frame: Initial frame.
 
-    Returns:
-        None
-    """
-    try:
-        # Parse bounding box coordinates
-        car_x1, car_y1, car_x2, car_y2 = parse_bbox(license_plate_bbox)
+        Returns:
+            None
+        """
 
-        # Get dimensions of the license crop
-        H, W, _ = license_crop.shape
+        self.__coeff = 0.107                    # Coefficient for resizing the license plate crop.
+        self.__cap = cap                        # Object for reading frames.
+        self.__frame: np.ndarray = frame        # Current frame.
+        self.__results: pd.DataFrame = results  # Contains license plate data.
 
-        # Store car shape data in a dictionary
-        car_shape_data = {'x1': car_x1, 'y1': car_y1,
-                          'x2': car_x2, 'y2': car_y2,
-                          'height': H, 'width': W, }
+        self.license_plate: Dict[int, Dict[str, Any]] = {}  # Stores license plate data.
+        self.license_crop: np.ndarray = None                # Cropped license plate image.
+        self.license_plate_number: str = ''
+        self.license_crop_shape: Dict[str, int] = None
 
-        # Add license plate image to the frame
-        add_license_plate_image(frame, license_crop, car_shape_data)
+        self.process_license_plate_data()
 
-        # Add background for the license plate number
-        add_background(frame, car_shape_data)
+    def get_license_plate(self) -> Dict[int, Dict[str, Any]]:
+        """Returns license plate data."""
+        return self.license_plate
 
-        # Add license plate number text to the frame
-        add_license_plate_text(frame, license_plate_number, car_shape_data)
+    def get_frame(self) -> np.ndarray:
+        """Returns the current frame."""
+        return self.__frame
 
-    except ValueError as e:
-        print(f"ValueError occurred while adding license plate overlay: {e}")
-    except Exception as e:
-        print(f"An unexpected error occurred while adding license plate overlay: {e}")
+    def set_frame(self, frame: np.ndarray) -> None:
+        """Sets the current frame."""
+        self.__frame = frame
 
+    def process_license_plate_data(self) -> None:
+        """
+        Processes license plate data from results DataFrame.
 
-def add_license_plate_image(frame, license_crop, car_shape):
-    """
-    Add license plate image to the frame.
+        Returns:
+            None
+        """
+        license_plate_data = self.extract_license_plate_data()
 
-    Args:
-        frame: Input frame to which the overlay will be added.
-        license_crop: Cropped license plate image.
-        car_shape: Dictionary containing the shape data of the car.
+        for car_id, data in license_plate_data.items():
+            if self.__cap:
+                self.read_frame(data)
 
-    Returns:
-        None
-    """
-    frame[int(car_shape['y1']) - car_shape['height'] - 100:int(car_shape['y1']) - 100,
-          int((car_shape['x1'] + car_shape['x2'] - car_shape['width']) / 2):int(
-              (car_shape['x1'] + car_shape['x2'] + car_shape['width']) / 2), :] = license_crop
+            # Capture the license plate crop
+            try:
+                self.license_crop = self.capture_license_plate_crop(data['license_bbox'])
+            except Exception as e:
+                print(f"Error capturing license plate crop for car ID {car_id}: {e}")
+                continue
 
+            # Store license plate crop and number
+            self.license_plate[car_id] = {'license_crop': self.license_crop,
+                                          'license_plate_number': data['license_plate_number']}
 
-def add_background(frame, car_shape):
-    """
-    Add background for the license plate number.
+    def extract_license_plate_data(self) -> Dict[int, Dict[str, Any]]:
+        """
+        Extracts license plate data from results DataFrame.
 
-    Args:
-        frame: Input frame to which the overlay will be added.
-        car_shape: Dictionary containing the shape data of the car.
+        Returns:
+            Dict[int, Dict[str, Any]]: Extracted license plate data.
+        """
+        license_plate_data = {}
+        grouped_results = self.__results.groupby('car_id')
 
-    Returns:
-        None
-    """
-    frame[int(car_shape['y1']) - car_shape['height'] - 400:int(car_shape['y1']) - car_shape['height'] - 100,
-          int((car_shape['x1'] + car_shape['x2'] - car_shape['width']) / 2):int(
-              (car_shape['x1'] + car_shape['x2'] + car_shape['width']) / 2), :] = (255, 255, 255)
+        for car_id, group in grouped_results:
+            max_row = group.loc[group['license_number_score'].idxmax()]
 
+            license_bbox_str = max_row['license_plate_bbox']
+            license_plate = [float(coord) for coord in license_bbox_str.split()]
 
-def add_license_plate_text(frame, license_plate_number, car_shape):
-    """
-    Add license plate number text to the frame.
+            license_plate_data[car_id] = {'max_score': max_row['license_number_score'],
+                                          'license_plate_number': max_row['license_number'],
+                                          'frame_number': max_row['frame_number'],
+                                          'license_bbox': license_plate, }
 
-    Args:
-        frame: Input frame to which the overlay will be added.
-        license_plate_number: License plate number.
-        car_shape: Dictionary containing the shape data of the car.
+        return license_plate_data
 
-    Returns:
-        None
-    """
-    (text_width, text_height), _ = cv2.getTextSize(license_plate_number, cv2.FONT_HERSHEY_SIMPLEX, 4.3, 17)
-    cv2.putText(frame, license_plate_number, (int((car_shape['x1'] + car_shape['x2'] - text_width) / 2),
-                                              int(car_shape['y1'] - car_shape['height'] - 250 + (text_height / 2))),
-                cv2.FONT_HERSHEY_SIMPLEX, 4.3, (0, 0, 0), 17)
+    def read_frame(self, data: Dict[str, Any]) -> None:
+        """
+        Reads frame from video capture object.
 
+        Args:
+            data: Data containing frame number.
 
-def extract_license_plate_data(results: pd.DataFrame) -> dict:
-    """
-    Extract license plate data from the results DataFrame.
-
-    Args:
-        results: DataFrame containing the results.
-
-    Returns:
-        dict: Dictionary containing extracted license plate data for each car_id.
-    """
-    license_plate_data = {}
-    grouped_results = results.groupby('car_id')
-
-    for car_id, group in grouped_results:
-        max_row = group.loc[group['license_number_score'].idxmax()]
-
-        license_bbox_str = max_row['license_plate_bbox']
-        license_bbox = [float(coord) for coord in license_bbox_str.split()]
-
-        license_plate_data[car_id] = {'max_score': max_row['license_number_score'],
-                                      'license_plate_number': max_row['license_number'],
-                                      'frame_number': max_row['frame_number'],
-                                      'license_bbox': license_bbox, }
-
-    return license_plate_data
-
-
-def capture_license_plate_crop(frame, license_bbox):
-    """
-    Capture and resize the license plate crop from the frame.
-
-    Args:
-        frame: The input image frame.
-        license_bbox: Bounding box coordinates of the license plate in the format (x1, y1, x2, y2).
-
-    Returns:
-        The cropped and resized license plate image.
-    """
-    x1, y1, x2, y2 = license_bbox
-
-    # Extracting the region of interest from the frame
-    license_crop = frame[int(y1):int(y2), int(x1):int(x2), :]
-
-    # Resizing the license plate crop to a fixed height of 400 pixels while maintaining the aspect ratio
-    height = 400
-    width = int((x2 - x1) * height / (y2 - y1))
-    license_crop = cv2.resize(license_crop, (width, height))
-
-    return license_crop
-
-
-def process_license_plate_data(cap, results):
-    """
-    Process license plate data by extracting relevant information from the results DataFrame,
-    capturing license plate crops from corresponding frames, and storing them along with their associated plate numbers.
-
-    Args:
-        cap: VideoCapture object.
-        results: DataFrame containing the results.
-
-    Returns:
-        Dictionary containing license plate crops and plate numbers for each car ID.
-    """
-    license_plate_data = extract_license_plate_data(results)
-    license_plate = {}
-
-    for car_id, data in license_plate_data.items():
+        Returns:
+            None
+        """
         # Set video capture to the frame containing the license plate
-        cap.set(cv2.CAP_PROP_POS_FRAMES, data['frame_number'])
+        self.__cap.set(cv2.CAP_PROP_POS_FRAMES, data['frame_number'])
 
         # Read the frame
-        ret, frame = cap.read()
+        ret, self.__frame = self.__cap.read()
 
-        # Capture the license plate crop
+    def capture_license_plate_crop(self, license_bbox: List[float]) -> np.ndarray:
+        """
+        Captures license plate crop from frame.
+
+        Args:
+            license_bbox: Bounding box coordinates of license plate.
+
+        Returns:
+            np.ndarray: Cropped license plate image.
+        """
+        x1, y1, x2, y2 = license_bbox
+
+        # Extracting the region of interest from the frame
+        license_crop = self.__frame[int(y1):int(y2), int(x1):int(x2), :]
+
+        height, width, _ = self.__frame.shape
+
+        # Resizing the license plate crop to a fixed height of 400 pixels while maintaining the aspect ratio
+        license_height = int(height * self.__coeff)
+        license_width = int((x2 - x1) * license_height / (y2 - y1))
+        license_crop = cv2.resize(license_crop, (license_width, license_height))
+
+        return license_crop
+
+    def add_license_plate_overlay(self, license_plate_bbox: str) -> None:
+        """
+        Adds license plate overlay to the frame.
+
+        Args:
+            license_plate_bbox: Bounding box coordinates of the license plate.
+
+        Returns:
+            None
+        """
         try:
-            license_crop = capture_license_plate_crop(frame, data['license_bbox'])
+            # Parse bounding box coordinates
+            car_x1, car_y1, car_x2, car_y2 = self.parse_bbox(license_plate_bbox)
+
+            # Get dimensions of the license crop
+            H, W, _ = self.license_crop.shape
+
+            # Store car shape data in a dictionary
+            self.license_crop_shape = {'x1': car_x1, 'y1': car_y1,
+                                       'x2': car_x2, 'y2': car_y2,
+                                       'height': H, 'width': W, }
+
+            # Add license plate image to the frame
+            license_plate_image_height = self.add_license_plate_image()
+
+            # Add background for the license plate number
+            bg_height, bg_width = self.add_background(license_plate_image_height)
+
+            # Add license plate number text to the frame
+            self.add_license_plate_text(bg_height)
+
+        except ValueError as e:
+            print(f"ValueError occurred while adding license plate overlay: {e}")
         except Exception as e:
-            print(f"Error capturing license plate crop for car ID {car_id}: {e}")
-            continue
+            print(f"An unexpected error occurred while adding license plate overlay: {e}")
 
-        # Store license plate crop and number
-        license_plate[car_id] = {'license_crop': license_crop,
-                                 'license_plate_number': data['license_plate_number']}
+    def add_license_plate_image(self) -> int:
+        """
+        Adds license plate image to the frame.
 
-    return license_plate
+        Returns:
+            int: Height of the license plate image.
+        """
+        y_top = int(self.license_crop_shape['y1']) - self.license_crop_shape['height']
+        y_bottom = int(self.license_crop_shape['y1'])
+        height = y_bottom - y_top
+
+        x_left, x_right = self.calculate_horizontal_coordinates()
+
+        self.__frame[y_top:y_bottom, x_left:x_right, :] = self.license_crop
+
+        return height
+
+    def add_background(self, license_plate_image_height: int) -> Tuple[int, int]:
+        """
+        Adds background for the license plate number.
+
+        Args:
+            license_plate_image_height: Height of the license plate image.
+
+        Returns:
+            Tuple[int, int]: Height and width of the background.
+        """
+        y_bottom = int(self.license_crop_shape['y1']) - self.license_crop_shape['height']
+        y_top = y_bottom - license_plate_image_height
+
+        x_left, x_right = self.calculate_horizontal_coordinates()
+
+        # Update the frame with white color
+        self.__frame[y_top:y_bottom, x_left:x_right, :] = (255, 255, 255)
+
+        bg_height = y_bottom - y_top
+        bg_width = x_right - x_left
+
+        return bg_height, bg_width
+
+    def add_license_plate_text(self, bg_height: int) -> None:
+        """
+        Adds license plate number text to the frame.
+
+        Args:
+            bg_height: Height of the background.
+
+        Returns:
+            None
+        """
+        fontScale = bg_height * self.__coeff * self.__coeff
+        fontThickness = math.ceil(17 * self.__coeff) * 3
+
+        (text_width, text_height), _ = cv2.getTextSize(self.license_plate_number, cv2.FONT_HERSHEY_SIMPLEX, fontScale, fontThickness)
+
+        x_left, x_right = self.calculate_horizontal_coordinates()
+        text_x = int((x_left + x_right - text_width) / 2)
+        text_y = int(self.license_crop_shape['y1']) - self.license_crop_shape['height'] - int(bg_height / 3)
+
+        # Put text on the frame
+        cv2.putText(self.__frame, self.license_plate_number, (text_x, text_y), cv2.FONT_HERSHEY_SIMPLEX, fontScale, (0, 0, 0), int(fontThickness))
+
+    def calculate_horizontal_coordinates(self) -> Tuple[int, int]:
+        """
+        Calculates horizontal coordinates for adding license plate overlay.
+
+        Returns:
+            Tuple[int, int]: Left and right coordinates.
+        """
+        x_mid = int((self.license_crop_shape['x1'] + self.license_crop_shape['x2']) / 2)
+        x_left = math.ceil(x_mid - self.license_crop_shape['width'] / 2)
+        x_right = math.ceil(x_mid + self.license_crop_shape['width'] / 2)
+        return x_left, x_right
+
+    @staticmethod
+    def parse_bbox(bbox: str) -> Tuple[float, float, float, float]:
+        """
+        Parses bounding box coordinates.
+
+        Args:
+            bbox: String representation of bounding box.
+
+        Returns:
+            Tuple[float, float, float, float]: Parsed bounding box coordinates.
+        """
+        # Replace multiple spaces with single space and remove leading space inside brackets
+        bbox = bbox.replace('[ ', '[').replace('   ', ' ').replace('  ', ' ').replace(' ', ',')
+        # Convert string representation of tuple to actual tuple using ast.literal_eval
+        x1, y1, x2, y2 = ast.literal_eval(bbox)
+        return x1, y1, x2, y2
+
+    @staticmethod
+    def draw_border(frame: np.ndarray, bbox: str, color: Tuple[int, int, int] = (0, 0, 255),
+                    thickness: int = 8) -> None:
+        """
+        Draws border around a bounding box on the frame.
+
+        Args:
+            frame: Frame to draw on.
+            bbox: Bounding box coordinates.
+            color: Color of the border.
+            thickness: Thickness of the border.
+
+        Returns:
+            None
+        """
+        # Extract coordinates from the bounding box
+        x1, y1, x2, y2 = LicensePlateProcessor.parse_bbox(bbox)
+
+        # Draw rectangle border on the frame
+        cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), color, thickness)
+
+    def crop_license_plate(self, license_plate_bbox: str, license_plate: Dict[str, Any]) -> None:
+        """
+        Crops license plate from license_plate dictionary and overlays onto the frame.
+
+        Args:
+            license_plate_bbox: Bounding box coordinates of the license plate.
+            license_plate: License plate data.
+
+        Returns:
+            None
+        """
+        # Extract license plate crop and plate number from the license_plate dictionary
+        self.license_crop = license_plate['license_crop']
+        self.license_plate_number = license_plate['license_plate_number']
+
+        # Overlay the license plate crop onto the frame
+        self.add_license_plate_overlay(license_plate_bbox)
 
 
-def parse_bbox(bbox):
-    # Replace multiple spaces with single space and remove leading space inside brackets
-    bbox = bbox.replace('[ ', '[').replace('   ', ' ').replace('  ', ' ').replace(' ', ',')
-    # Convert string representation of tuple to actual tuple using ast.literal_eval
-    x1, y1, x2, y2 = ast.literal_eval(bbox)
-    return x1, y1, x2, y2
-
-
-def draw_border(frame, bbox, color=(0, 0, 255)):
+def process_frame(frame: np.ndarray, results: pd.DataFrame, license_plate: Dict[int, Dict[str, Any]],
+                  frame_number: int, license_plate_processor: LicensePlateProcessor) -> np.ndarray:
     """
-    Draw a colored rectangle border around the object specified by the bounding box coordinates on the given frame.
+    Processes a single frame by overlaying license plate information.
 
     Args:
-        frame: Input frame to which the rectangle border will be drawn.
-        bbox: Bounding box coordinates of the object in the format (x1, y1, x2, y2).
-        color: Color of the rectangle border in BGR format (default is red: (0, 0, 255)).
+        frame: Input frame.
+        results: DataFrame containing license plate data.
+        license_plate: Dictionary containing license plate data.
+        frame_number: Frame number.
+        license_plate_processor: Instance of LicensePlateProcessor.
 
     Returns:
-        None
-    """
-    # Extract coordinates from the bounding box
-    x1, y1, x2, y2 = parse_bbox(bbox)
-
-    # Draw rectangle border on the frame
-    cv2.rectangle(frame, (int(x1), int(y1)), (int(x2), int(y2)), color, 12)
-
-
-def crop_license_plate(frame, license_plate_bbox, license_plate):
-    """
-    Overlay the license plate crop onto a frame.
-
-    Args:
-        frame: Input frame to which the license plate crop will be overlaid.
-        license_plate_bbox: Bounding box coordinates of the license plate in the format (x1, y1, x2, y2).
-        license_plate: Dictionary containing license plate crop and plate number.
-
-    Returns:
-        None
-    """
-    # Extract license plate crop and plate number from the license_plate dictionary
-    license_crop = license_plate['license_crop']
-    license_plate_number = license_plate['license_plate_number']
-
-    # Overlay the license plate crop onto the frame
-    add_license_plate_overlay(frame, license_crop, license_plate_number, license_plate_bbox)
-
-
-def process_frame(frame, results, license_plate, frame_number):
-    """
-    Process a single frame by drawing borders around detected cars and license plates,
-    and overlaying license plate crops.
-
-    Args:
-        frame: Input frame to be processed.
-        results: DataFrame containing detection results.
-        license_plate: Dictionary containing license plate crops and plate numbers for each car ID.
-        frame_number: Number of the frame to be processed.
-
-    Returns:
-        None
+        np.ndarray: Processed frame.
     """
     # Filter results DataFrame for the current frame number
     df_ = results[results['frame_number'] == frame_number]
 
     for row in range(len(df_)):
-        draw_border(frame, df_.iloc[row]['car_bbox'], color=(0, 0, 255))
-        draw_border(frame, df_.iloc[row]['license_plate_bbox'], color=(0, 255, 0))
+        LicensePlateProcessor.draw_border(frame, df_.iloc[row]['car_bbox'], color=(0, 0, 255))
+        LicensePlateProcessor.draw_border(frame, df_.iloc[row]['license_plate_bbox'], color=(0, 255, 0))
 
         # Get license plate data for the current car
         license_plate_data = license_plate[df_.iloc[row]['car_id']]
 
         # Overlay license plate crop onto the frame
-        crop_license_plate(frame, df_.iloc[row]['license_plate_bbox'], license_plate_data)
+        license_plate_processor.crop_license_plate(df_.iloc[row]['license_plate_bbox'], license_plate_data)
+
+    return license_plate_processor.get_frame()
 
 
-def process_video(cap, results, license_plate, out):
+def process_video(cap: cv2.VideoCapture, results: pd.DataFrame, license_plate: Dict[int, Dict[str, Any]],
+                  out: cv2.VideoWriter, license_plate_processor: LicensePlateProcessor) -> None:
     """
-    Process each frame of a video by applying object detection results and overlaying license plate information.
+    Processes a video by overlaying license plate information and writes the processed frames to output video.
 
     Args:
-        cap: VideoCapture object for the input video.
-        results: DataFrame containing object detection results.
-        license_plate: Dictionary containing license plate crops and plate numbers for each car ID.
-        out: VideoWriter object for the output video.
+        cap: VideoCapture object.
+        results: DataFrame containing license plate data.
+        license_plate: Dictionary containing license plate data.
+        out: VideoWriter object for output video.
+        license_plate_processor: Instance of LicensePlateProcessor.
 
     Returns:
         None
@@ -284,7 +360,8 @@ def process_video(cap, results, license_plate, out):
             break
 
         # Process the current frame
-        process_frame(frame, results, license_plate, frame_number)
+        license_plate_processor.set_frame(frame)
+        process_frame(frame, results, license_plate, frame_number, license_plate_processor)
 
         # Write the processed frame to the output video
         out.write(frame)
@@ -292,9 +369,39 @@ def process_video(cap, results, license_plate, out):
         frame = cv2.resize(frame, (1280, 720))
 
 
-def main():
-    results = pd.read_csv('./test_interpolated.csv')
+def process_photo(image: np.ndarray, results: pd.DataFrame, license_plate: Dict[int, Dict[str, Any]],
+                  license_plate_processor: LicensePlateProcessor) -> None:
+    """
+    Processes a single photo by overlaying license plate information and saves the processed photo.
 
+    Args:
+        image: Input image.
+        results: DataFrame containing license plate data.
+        license_plate: Dictionary containing license plate data.
+        license_plate_processor: Instance of LicensePlateProcessor.
+
+    Returns:
+        None
+    """
+    frame_number = 0
+
+    license_plate_processor.set_frame(image)
+    process_frame(image, results, license_plate, frame_number, license_plate_processor)
+
+    output_path = './outputs/processed_photo.jpg'
+    cv2.imwrite(output_path, image)
+
+
+def start_with_video(results: pd.DataFrame) -> None:
+    """
+    Starts processing with a video input.
+
+    Args:
+        results: DataFrame containing license plate data.
+
+    Returns:
+        None
+    """
     # Load input video
     video_path = './assets/sample.mp4'
     cap = cv2.VideoCapture(video_path)
@@ -304,16 +411,45 @@ def main():
     fps = cap.get(cv2.CAP_PROP_FPS)
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    out = cv2.VideoWriter('./out.mp4', fourcc, fps, (width, height))
+    out = cv2.VideoWriter('./outputs/out.mp4', fourcc, fps, (width, height))
 
-    license_plate = process_license_plate_data(cap, results)
+    license_plate_processor = LicensePlateProcessor(results, cap=cap)
+    license_plate = license_plate_processor.get_license_plate()
 
     # Process each frame of the video and write processed frames to output video
-    process_video(cap, results, license_plate, out)
+    process_video(cap, results, license_plate, out, license_plate_processor)
 
     # Release resources
     out.release()
     cap.release()
+
+
+def start_with_photo(results: pd.DataFrame) -> None:
+    """
+    Starts processing with a photo input.
+
+    Args:
+        results: DataFrame containing license plate data.
+
+    Returns:
+        None
+    """
+    photo_path = './assets/img_sample.jpg'
+    image = cv2.imread(photo_path)
+
+    license_plate_processor = LicensePlateProcessor(results, frame=image)
+    license_plate = license_plate_processor.get_license_plate()
+
+    process_photo(image, results, license_plate, license_plate_processor)
+
+
+def main() -> None:
+    """Main function to start the processing."""
+    results = pd.read_csv('./test_interpolated.csv')
+
+    # start_with_video(results)
+
+    start_with_photo(results)
 
 
 if __name__ == '__main__':

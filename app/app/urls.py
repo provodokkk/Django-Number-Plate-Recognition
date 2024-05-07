@@ -21,5 +21,5 @@ from main import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
-    path('', views.index, name='run_plate_recognition'),
+    path('run_plate_recognition/', views.run_plate_recognition, name='run_plate_recognition'),
 ]

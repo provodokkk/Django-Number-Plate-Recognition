@@ -1,11 +1,13 @@
 import ast
 
 import cv2
+import os
 import numpy as np
 import pandas as pd
 import math
 
 from typing import List, Dict, Tuple, Any, Optional
+from paths import uploaded_file, OUTPUT_DIR, INTERPOLATED_CSV_FILE_PATH
 
 
 class LicensePlateProcessor:
@@ -388,7 +390,7 @@ def process_photo(image: np.ndarray, results: pd.DataFrame, license_plate: Dict[
     license_plate_processor.set_frame(image)
     process_frame(image, results, license_plate, frame_number, license_plate_processor)
 
-    output_path = './outputs/processed_photo.jpg'
+    output_path = str(os.path.join(OUTPUT_DIR, 'processed_' + uploaded_file['name']))
     cv2.imwrite(output_path, image)
 
 
@@ -403,15 +405,15 @@ def start_with_video(results: pd.DataFrame) -> None:
         None
     """
     # Load input video
-    video_path = './assets/sample.mp4'
-    cap = cv2.VideoCapture(video_path)
+    cap = cv2.VideoCapture(uploaded_file['path'])
 
     # Define codec and create VideoWriter object for output video
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
     fps = cap.get(cv2.CAP_PROP_FPS)
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    out = cv2.VideoWriter('./outputs/out.mp4', fourcc, fps, (width, height))
+    output_path = str(os.path.join(OUTPUT_DIR, 'processed_' + uploaded_file['name']))
+    out = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
 
     license_plate_processor = LicensePlateProcessor(results, cap=cap)
     license_plate = license_plate_processor.get_license_plate()
@@ -434,8 +436,7 @@ def start_with_photo(results: pd.DataFrame) -> None:
     Returns:
         None
     """
-    photo_path = './assets/img_sample.jpg'
-    image = cv2.imread(photo_path)
+    image = cv2.imread(uploaded_file['path'])
 
     license_plate_processor = LicensePlateProcessor(results, frame=image)
     license_plate = license_plate_processor.get_license_plate()
@@ -445,11 +446,12 @@ def start_with_photo(results: pd.DataFrame) -> None:
 
 def main() -> None:
     """Main function to start the processing."""
-    results = pd.read_csv('./test_interpolated.csv')
+    results = pd.read_csv(INTERPOLATED_CSV_FILE_PATH)
 
-    # start_with_video(results)
-
-    start_with_photo(results)
+    if uploaded_file['name'].lower().endswith('.jpg'):  # ('.png', '.jpg', '.jpeg')
+        start_with_photo(results)
+    elif uploaded_file['name'].lower().endswith('.mp4'):  # ('.mp4', '.avi', '.mov')
+        start_with_video(results)
 
 
 if __name__ == '__main__':

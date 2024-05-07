@@ -2,9 +2,8 @@ import os
 import sys
 
 
-def run_plate_recongition(input_file: str):
-    """Runs the code for plate recognition and vizualization"""
-    os.system(f'python plate_recognition.py {sys.argv[1]}')
-    os.system('python add_missing_data.py')
-    os.system('python visualize.py')
-
+def run_plate_recognition():
+    """Runs the code for plate recognition and visualization"""
+    os.system('python ./number_plate_recognition/plate_recognition.py')
+    os.system('python ./number_plate_recognition/add_missing_data.py')
+    os.system('python ./number_plate_recognition/visualize.py')

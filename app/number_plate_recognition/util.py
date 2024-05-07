@@ -1,5 +1,7 @@
 import string
 import easyocr
+import shutil
+import os
 
 # Initialize the OCR reader
 reader = easyocr.Reader(['en'], gpu=False)
@@ -20,13 +22,13 @@ dict_int_to_char = {'0': 'O',
                     '5': 'S'}
 
 
-def write_csv(results, output_path):
+def write_csv(results: dict, output_path: str):
     """
     Write the results to a CSV file.
 
     Args:
-        results (dict): Dictionary containing the results.
-        output_path (str): Path to the output CSV file.
+        results: Dictionary containing the results.
+        output_path: Path to the output CSV file.
     """
     with open(output_path, 'w') as f:
         f.write('{},{},{},{},{},{},{}\n'.format('frame_number', 'car_id', 'car_bbox',
@@ -146,3 +148,12 @@ def get_car(license_plate, vehicle_track_ids):
             return vehicle_track_ids[j]
 
     return -1, -1, -1, -1, -1
+
+
+def clear_folder(folder_path: str) -> None:
+    """Clears all files in the specified folder."""
+    try:
+        shutil.rmtree(folder_path)
+        os.makedirs(folder_path)
+    except Exception as e:
+        print(f"An error occurred while clearing the folder: {e}")

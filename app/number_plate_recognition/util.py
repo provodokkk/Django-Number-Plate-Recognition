@@ -1,7 +1,5 @@
 import string
 import easyocr
-import shutil
-import os
 
 # Initialize the OCR reader
 reader = easyocr.Reader(['en'], gpu=False)
@@ -148,12 +146,3 @@ def get_car(license_plate, vehicle_track_ids):
             return vehicle_track_ids[j]
 
     return -1, -1, -1, -1, -1
-
-
-def clear_folder(folder_path: str) -> None:
-    """Clears all files in the specified folder."""
-    try:
-        shutil.rmtree(folder_path)
-        os.makedirs(folder_path)
-    except Exception as e:
-        print(f"An error occurred while clearing the folder: {e}")

@@ -1,4 +1,6 @@
+import shutil
 import os
+
 
 # Base directory
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -12,20 +14,30 @@ RESULTS_CSV_FILE_PATH = os.path.join(BASE_DIR, 'results.csv')
 INTERPOLATED_CSV_FILE_PATH = os.path.join(BASE_DIR, 'test_interpolated.csv')
 
 
-# Uploads path
-def process_uploads_folder(folder_path: str) -> dict:
+def get_files_data(folder_path: str) -> list[dict[str, str]]:
     files = os.listdir(folder_path)
-    return {'name': files[0],  # take only 1 file at a time
-            'path': os.path.join(folder_path, files[0]), }
+    return [{'name': file, 'path': os.path.join(folder_path, file)} for i, file in enumerate(files)]
 
 
+# Uploads
 UPLOADS_DIR = os.path.join(BASE_DIR, '..', 'media', 'uploads')
-uploaded_file = process_uploads_folder(UPLOADS_DIR)
-
-# Output path
-OUTPUT_DIR = os.path.join(BASE_DIR, 'outputs')
-output_file = {'path': ''}
 
 
+def get_uploaded_file_info():
+    return get_files_data(UPLOADS_DIR)[0]
 
 
+# Outputs
+OUTPUTS_DIR = os.path.join(BASE_DIR, '..', 'media', 'outputs')
+
+
+def get_output_file_info():
+    return get_files_data(OUTPUTS_DIR)[0]
+
+
+# Processed frames
+PROCESSED_FRAMES_DIR = os.path.join(BASE_DIR, '..', 'media', 'processed_frames')
+
+
+def get_all_processed_frame_files_info():
+    return get_files_data(PROCESSED_FRAMES_DIR)

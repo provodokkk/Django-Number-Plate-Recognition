@@ -1,36 +1,28 @@
-/*.upload-form {*/
-/*    background-color: blue;*/
-/*    padding: 50px;*/
-/*}*/
 
-/*#id_file {*/
-/*	width: 0.1px;*/
-/*	height: 0.1px;*/
-/*	opacity: 0;*/
-/*	overflow: hidden;*/
-/*	position: absolute;*/
-/*	z-index: -1;*/
-/*}*/
+.black_btn {
+    border-radius: 5px;
+    background-color: black;
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    border: none;
+    padding: 8px 16px;
+    font-size: 17px;
+}
 
-/*label {*/
-/*    margin: 20px;*/
-/*    padding: 20px;*/
-/*    font-size: 1.25em;*/
-/*    font-weight: 700;*/
-/*    color: white;*/
-/*    background-color: black;*/
-/*    display: inline-block;*/
-/*}*/
+.black_btn:hover {
+    color: purple;
+    transition: all 0.3s ease 0s;
+}
 
-/*label:hover {*/
-/*    background-color: red;*/
-/*}*/
 
-/*label {*/
-/*	cursor: pointer; !* "hand" cursor *!*/
-/*}*/
+#dropZone {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    height: 15vh;
+}
 
-/*label {*/
-/*	outline: 1px dotted #000;*/
-/*	outline: -webkit-focus-ring-color auto 5px;*/
-/*}*/
+.send_btn {
+    margin: 10px;
+}

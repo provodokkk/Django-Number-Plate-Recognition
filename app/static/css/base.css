@@ -9,25 +9,26 @@ body {
     background-color: cornflowerblue;
 }
 
-.logo {
-    height: 10vh;
-    width: auto;
-    cursor: pointer;
+.logo-link {
+    display: inline-block;
+    background-color: cornflowerblue;
 }
 
-/*li, a, button {*/
-/*    font-size: 20px;*/
-/*}*/
+.logo-img {
+    height: 7vh;
+    border-radius: 30%;
+}
 
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 30px 10%;
+    padding: 1% 5%;
     background-color: cornflowerblue;
 }
 
 .nav_links {
+    background-color: cornflowerblue;
     list-style: none;
 }
 
@@ -36,12 +37,33 @@ header {
     padding: 0px 15px;
 }
 
-.nav_links li a {
+.nav_links li a:hover {
+    color: purple;
     transition: all 0.3s ease 0s;
 }
 
-.nav_links li a:hover {
-    color: aquamarine;
+.try_btn, .nav_links li a{
+    background-color: black;
+    display: inline-block; /* Ensures the background covers the entire button */
+    border-radius: 5px;
+    overflow: hidden; /* Ensures the button doesn't overflow its parent */
+}
+
+.try_btn button, .nav_links li a {
+    background-color: black; /* Match parent's background color */
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    border: none;
+    padding: 8px 16px;
+    border-radius: inherit; /* Inherits border-radius from parent */
+    font-size: 17px;
+}
+
+.nav_item {
+    background-color: black;
+    display: inline-block;
+    border-radius: 5px;
 }
 
 /*button {*/
@@ -56,3 +78,16 @@ header {
 /*button:hover {*/
 /*    background-color: rgba(0, 135, 170, 0.7);*/
 /*}*/
+
+
+footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1% 5%;
+    background-color: cornflowerblue;
+}
+
+.content {
+    min-height: 90vh;
+}

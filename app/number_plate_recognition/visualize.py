@@ -1,13 +1,21 @@
 import ast
 
-import cv2
 import os
+import sys
+import csv
+import cv2
 import numpy as np
 import pandas as pd
 import math
 
 from typing import List, Dict, Tuple, Any, Optional
-from paths import uploaded_file, OUTPUT_DIR, INTERPOLATED_CSV_FILE_PATH
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from number_plate_recognition.paths import get_uploaded_file_info, INTERPOLATED_CSV_FILE_PATH
+from number_plate_recognition.paths import OUTPUTS_DIR, PROCESSED_FRAMES_DIR
+
+
+uploaded_file = get_uploaded_file_info()
 
 
 class LicensePlateProcessor:
@@ -304,8 +312,36 @@ class LicensePlateProcessor:
         self.add_license_plate_overlay(license_plate_bbox)
 
 
-def process_frame(frame: np.ndarray, results: pd.DataFrame, license_plate: Dict[int, Dict[str, Any]],
-                  frame_number: int, license_plate_processor: LicensePlateProcessor) -> np.ndarray:
+def get_plates_with_highest_score(csv_file: str):
+    # Dictionary to store data for each unique license number
+    license_data = {}
+
+    # Read the CSV file
+    with open(csv_file, 'r') as file:
+        _reader = csv.DictReader(file)
+
+        # Iterate through each row in the CSV file
+        for row in _reader:
+            car_id = row['car_id']
+            license_number_score = float(row['license_number_score'])
+
+            # If license number already exists in dictionary, update if current score is higher
+            if car_id in license_data:
+                if license_number_score > float(license_data[car_id]['license_number_score']):
+                    license_data[car_id] = row
+            # If license number is new, add it to dictionary
+            else:
+                license_data[car_id] = row
+
+    # Convert dictionary values to list
+    filtered_data = list(license_data.values())
+
+    return filtered_data
+
+
+def process_frame(frame: np.ndarray, results: pd.DataFrame, license_plate: Dict[int, Dict[str, Any]], frame_number: int,
+                  license_plate_processor: LicensePlateProcessor,
+                  bbox_color: Tuple[int, int, int] = (0, 0, 255)) -> np.ndarray:
     """
     Processes a single frame by overlaying license plate information.
 
@@ -315,6 +351,7 @@ def process_frame(frame: np.ndarray, results: pd.DataFrame, license_plate: Dict[
         license_plate: Dictionary containing license plate data.
         frame_number: Frame number.
         license_plate_processor: Instance of LicensePlateProcessor.
+        bbox_color: Bounding box color.
 
     Returns:
         np.ndarray: Processed frame.
@@ -323,8 +360,8 @@ def process_frame(frame: np.ndarray, results: pd.DataFrame, license_plate: Dict[
     df_ = results[results['frame_number'] == frame_number]
 
     for row in range(len(df_)):
-        LicensePlateProcessor.draw_border(frame, df_.iloc[row]['car_bbox'], color=(0, 0, 255))
-        LicensePlateProcessor.draw_border(frame, df_.iloc[row]['license_plate_bbox'], color=(0, 255, 0))
+        LicensePlateProcessor.draw_border(frame, df_.iloc[row]['car_bbox'], color=bbox_color)
+        LicensePlateProcessor.draw_border(frame, df_.iloc[row]['license_plate_bbox'], color=bbox_color)
 
         # Get license plate data for the current car
         license_plate_data = license_plate[df_.iloc[row]['car_id']]
@@ -370,6 +407,8 @@ def process_video(cap: cv2.VideoCapture, results: pd.DataFrame, license_plate: D
 
         frame = cv2.resize(frame, (1280, 720))
 
+    process_high_score_frames(cap, results, license_plate, license_plate_processor)
+
 
 def process_photo(image: np.ndarray, results: pd.DataFrame, license_plate: Dict[int, Dict[str, Any]],
                   license_plate_processor: LicensePlateProcessor) -> None:
@@ -390,8 +429,12 @@ def process_photo(image: np.ndarray, results: pd.DataFrame, license_plate: Dict[
     license_plate_processor.set_frame(image)
     process_frame(image, results, license_plate, frame_number, license_plate_processor)
 
-    output_path = str(os.path.join(OUTPUT_DIR, 'processed_' + uploaded_file['name']))
+    output_path = str(os.path.join(OUTPUTS_DIR, 'processed_' + uploaded_file['name']))
     cv2.imwrite(output_path, image)
+
+    process_frame(image, results, license_plate, frame_number, license_plate_processor, (0, 255, 0))
+    processed_frames_path = str(os.path.join(PROCESSED_FRAMES_DIR, f'processed_frame_' + uploaded_file['name']))
+    cv2.imwrite(processed_frames_path, image)
 
 
 def start_with_video(results: pd.DataFrame) -> None:
@@ -408,11 +451,11 @@ def start_with_video(results: pd.DataFrame) -> None:
     cap = cv2.VideoCapture(uploaded_file['path'])
 
     # Define codec and create VideoWriter object for output video
-    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    fourcc = cv2.VideoWriter_fourcc(*'avc1')
     fps = cap.get(cv2.CAP_PROP_FPS)
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    output_path = str(os.path.join(OUTPUT_DIR, 'processed_' + uploaded_file['name']))
+    output_path = str(os.path.join(OUTPUTS_DIR, 'processed_' + uploaded_file['name']))
     out = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
 
     license_plate_processor = LicensePlateProcessor(results, cap=cap)

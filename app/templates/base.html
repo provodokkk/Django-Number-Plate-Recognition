@@ -10,19 +10,27 @@
 <body>
 
 <header>
-    <img src="{% static 'images/manatee.png' %}" class="logo">
+    <a href="{% url 'index' %}" class="logo-link">
+        <img src="{% static 'images/logo.jpg' %}" class="logo-img" alt="Logo">
+    </a>
     <nav>
         <ul class="nav_links">
-            <li><a href="#">About</a></li>
-            <li><a href="#">Contacts</a></li>
+            <li class="nav_item"><a href="#" class="nav_link">About</a></li>
+            <li class="nav_item"><a href="#" class="nav_link">Contacts</a></li>
         </ul>
     </nav>
-    <a href="#" class="try_btn"><button>Try XXX</button></a>
+    <a href="{% url 'index' %}" class="try_btn"><button>Try XXX</button></a>
 </header>
 
-{% block content %} {% endblock content %}
+<div class="content">
+    {% block content %} {% endblock content %}
+</div>
 
-<h1>footer</h1>
+<footer>
+    <a href="{% url 'index' %}" class="logo-link">
+        <img src="{% static 'images/logo.jpg' %}" class="logo-img" alt="Logo">
+    </a>
+</footer>
 
 </body>
 </html>

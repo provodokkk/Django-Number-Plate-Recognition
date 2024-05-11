@@ -5,7 +5,9 @@ from sort.sort import *
 from util import get_car, read_license_plate, write_csv
 
 from coco_classnames import Classnames
-from paths import COCO_MODEL_PATH, LICENSE_PLATE_DETECTOR_MODEL_PATH, RESULTS_CSV_FILE_PATH, uploaded_file
+from paths import COCO_MODEL_PATH, LICENSE_PLATE_DETECTOR_MODEL_PATH, RESULTS_CSV_FILE_PATH, get_uploaded_file_info
+
+uploaded_file = get_uploaded_file_info()
 
 # load models
 coco_model = YOLO(COCO_MODEL_PATH)
@@ -14,8 +16,9 @@ license_plate_detector = YOLO(LICENSE_PLATE_DETECTOR_MODEL_PATH)
 mot_tracker = Sort()
 vehicles = Classnames.get_vehicles()
 
+
 def process_frame(frame):
-    _results= {}
+    _results = {}
     # Detect vehicles
     detections = coco_model(frame)[0]
     detected_vehicles = []

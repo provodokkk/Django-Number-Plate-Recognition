@@ -372,6 +372,42 @@ def process_frame(frame: np.ndarray, results: pd.DataFrame, license_plate: Dict[
     return license_plate_processor.get_frame()
 
 
+def process_high_score_frames(cap: cv2.VideoCapture, results: pd.DataFrame, license_plate: Dict[int, Dict[str, Any]],
+                              license_plate_processor: LicensePlateProcessor) -> None:
+    """
+    Process frames with the highest score from a CSV file.
+
+    Args:
+        cap: VideoCapture object.
+        results: DataFrame containing license plate data.
+        license_plate: Dictionary containing license plate data.
+        license_plate_processor: Instance of LicensePlateProcessor.
+
+    Returns:
+        None
+    """
+    plates_with_highest_score_data = get_plates_with_highest_score(INTERPOLATED_CSV_FILE_PATH)
+    for item in plates_with_highest_score_data:
+        frame_number = int(item['frame_number'])
+        cap.set(cv2.CAP_PROP_POS_FRAMES, frame_number)
+        ret, frame = cap.read()
+
+        if ret:
+            # Process the frame
+            license_plate_processor.set_frame(frame)
+            process_frame(frame, results, license_plate, frame_number, license_plate_processor, (0, 255, 0))
+
+            uploaded_file_without_extension = remove_file_extension(uploaded_file['name'])
+            processed_frame_path = str(os.path.join(PROCESSED_FRAMES_DIR,
+                                       f'processed_frame_{frame_number}{uploaded_file_without_extension}.jpg'))
+            cv2.imwrite(processed_frame_path, frame)
+
+
+def remove_file_extension(filename: str):
+    """Removes the file extension from a given filename."""
+    return os.path.splitext(filename)[0]
+
+
 def process_video(cap: cv2.VideoCapture, results: pd.DataFrame, license_plate: Dict[int, Dict[str, Any]],
                   out: cv2.VideoWriter, license_plate_processor: LicensePlateProcessor) -> None:
     """

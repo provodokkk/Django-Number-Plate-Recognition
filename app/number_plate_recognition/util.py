@@ -1,5 +1,7 @@
 import string
 import easyocr
+import os
+from uuid import uuid4
 
 # Initialize the OCR reader
 reader = easyocr.Reader(['en'], gpu=False)
@@ -146,3 +148,9 @@ def get_car(license_plate, vehicle_track_ids):
             return vehicle_track_ids[j]
 
     return -1, -1, -1, -1, -1
+
+
+def file_upload_path(instance, filename):
+    unique_filename = str(uuid4())
+    ext = filename.split('.')[-1]
+    return os.path.join('buffer/uploads', f'{unique_filename}.{ext}')

@@ -1,0 +1,51 @@
+/* Add padding to table cells */
+.table-bordered td, .table-bordered th {
+    padding: 8px;
+}
+
+/* Alternate row colors */
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f9f9f9;
+}
+
+/* Center-align content within table cells */
+.table tbody td {
+    text-align: center;
+}
+
+
+.image-container {
+    position: relative;
+    width: 500px; /* Adjust as needed */
+    height: 500px; /* Adjust as needed */
+    overflow: hidden;
+}
+
+/*.small-image {*/
+/*    width: 100%; !* Ensure the small image fills the container *!*/
+/*    height: auto; !* Maintain aspect ratio *!*/
+/*    transition: transform 0.3s ease; !* Add a smooth transition effect *!*/
+/*}*/
+
+.full-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: auto;
+    height: auto;
+    opacity: 0; /* Initially hidden */
+    transition: opacity 0.3s ease; /* Add a smooth transition effect */
+}
+
+.image-container:hover .image {
+    transform: scale(1.2); /* Scale up the small image on hover */
+}
+
+.image-container:hover .full-image {
+    opacity: 1; /* Show the full-size image on hover */
+}
+
+.small-image {
+    max-width: 50vw;
+    max-height: 50vh;
+}

@@ -23,36 +23,48 @@ def index(request):
     else:
         form = UploadFileForm()
 
-    return render(request, 'main/index.html', {'form': form})
+    context = {
+        'form': form,
+        'files': File.objects.all()
+    }
+
+    return render(request, 'main/index.html', context)
 
 
-def get_processed_file(request):
-    main.run_plate_recognition()
-    file = File.objects.last()
+def get_processed_file(request, file_id=None):
+    if file_id is not None:
+        file = File.objects.get(pk=file_id)
+        file_type = determine_file_type(file.processed_file.name)
+        plates = Plate.objects.filter(file_id=file.id)
+    else:
+        main.run_plate_recognition()
+        file = File.objects.last()
 
-    # update processed file path to the table
-    processed_file = get_output_file_info()
-    file.processed_file = os.path.join('buffer', 'outputs', processed_file['name'])
-    file.save()
+        # update processed file path to the table
+        processed_file = get_output_file_info()
+        file.processed_file = os.path.join('buffer', 'outputs', processed_file['name'])
+        file.save()
 
-    processed_frames = get_all_processed_frame_files_info()
-    plates_with_highest_score_data = get_plates_with_highest_score(INTERPOLATED_CSV_FILE_PATH)
+        file_type = determine_file_type(processed_file['name'])
 
-    for plate, frame in zip(plates_with_highest_score_data, processed_frames):
-        accuracy = round(float(plate['license_number_score']) * 100, 2)
-        new_plate = Plate(file_id=file.id, frame_number=plate['frame_number'], plate_number=plate['license_number'],
-                          accuracy=accuracy, processed_frame=f"buffer/processed_frames/{frame['name']}")
-        new_plate.save()
+        processed_frames = get_all_processed_frame_files_info()
+        plates_with_highest_score_data = get_plates_with_highest_score(INTERPOLATED_CSV_FILE_PATH)
 
-    last_plate = Plate.objects.last()
-    plates = Plate.objects.filter(file_id=last_plate.file_id)
+        for plate, frame in zip(plates_with_highest_score_data, processed_frames):
+            accuracy = round(float(plate['license_number_score']) * 100, 2)
+            new_plate = Plate(file_id=file.id, frame_number=plate['frame_number'], plate_number=plate['license_number'],
+                              accuracy=accuracy, processed_frame=f"buffer/processed_frames/{frame['name']}")
+            new_plate.save()
 
-    move_all_files_to_constant_dirs()
-    update_paths_in_database(file)
+        last_plate = Plate.objects.last()
+        plates = Plate.objects.filter(file_id=last_plate.file_id)
+
+        move_all_files_to_constant_dirs()
+        update_paths_in_database(file)
 
     context = {
         'file': file,
-        'file_type': determine_file_type(processed_file['name']),
+        'file_type': file_type,
         'plates': plates,
     }
     return render(request, 'main/results.html', context)

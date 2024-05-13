@@ -24,4 +24,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
     path('results/', views.get_processed_file, name='results'),
+    path('results/<int:file_id>/', views.get_processed_file, name='results'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

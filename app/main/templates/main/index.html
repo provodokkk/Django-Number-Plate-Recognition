@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-{#    <link rel="stylesheet" href="{% static 'css/index.css' %}">#}
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
     <script src="{% static 'js/index.js' %}" defer></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.css" integrity="sha512-7uSoC3grlnRktCWoO4LjHMjotq8gf9XDFQerPuaph+cqR7JC9XKGdvN+UwZMC14aAaBDItdRj3DcSDs4kMWUgg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -12,19 +12,35 @@
 {#      <form action="/file-upload" class="dropzone" id="my-great-dropzone"></form>#}
 {#    </div>#}
 
-    <br>
+
     <div id="dropZone">
-        <form action="{% url 'index' %}" class="dropzone" id="my-great-dropzone" method="POST" enctype="multipart/form-data" >
+      <form action="{% url 'index' %}" method="POST" enctype="multipart/form-data" > {#    class="dropzone" id="my-great-dropzone"#}
             {% csrf_token %}
             {{ form }}
-            <p><button type="submit">Send</button></p>
+            <p><button type="submit" class="black_btn send_btn">Send</button></p>
         </form>
     </div>
-    <br>
-
 
     <center>
-        <img src="{% static 'images/manatee.png' %}">
+        <form action="{% url 'results' %}" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="black_btn">Run</button>
+        </form>
     </center>
+
+    <br>
+    <br>
+
+    <center>
+        <h1>List of Files</h1>
+        <ul class="files-list">
+            {% for file in files %}
+            <li class="files-list-item">
+                <a href="{% url 'results' file.id %}" class="black_btn send_btn">File {{ file.id }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </center>
+
 
 {% endblock content %}

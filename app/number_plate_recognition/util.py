@@ -57,6 +57,7 @@ def write_csv(results: dict, output_path: str):
                                                             results[frame_nmr][car_id]['license_plate']['text_score'])
                             )
 
+
 def license_complies_format(text):
     """
     Check if the license plate text complies with the required format.

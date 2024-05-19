@@ -25,4 +25,5 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('results/', views.get_processed_file, name='results'),
     path('results/<int:file_id>/', views.get_processed_file, name='results'),
+    path('download-excel/<int:file_id>/', views.download_excel, name='download_excel'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

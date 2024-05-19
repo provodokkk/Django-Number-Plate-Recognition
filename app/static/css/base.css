@@ -1,3 +1,8 @@
+:root {
+  --blue-color: #3b5983;
+  --hover-text-color: #ff5437;
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -6,12 +11,12 @@
 }
 
 body {
-    background-color: cornflowerblue;
+    background-color: var(--blue-color);
 }
 
 .logo-link {
     display: inline-block;
-    background-color: cornflowerblue;
+    background-color: var(--blue-color);
 }
 
 .logo-img {
@@ -24,11 +29,11 @@ header {
     justify-content: space-between;
     align-items: center;
     padding: 1% 5%;
-    background-color: cornflowerblue;
+    background-color: var(--blue-color);
 }
 
 .nav_links {
-    background-color: cornflowerblue;
+    background-color: var(--blue-color);
     list-style: none;
 }
 
@@ -38,7 +43,7 @@ header {
 }
 
 .nav_links li a:hover {
-    color: purple;
+    color: var(--hover-text-color);
     transition: all 0.3s ease 0s;
 }
 
@@ -85,7 +90,7 @@ footer {
     justify-content: space-between;
     align-items: center;
     padding: 1% 5%;
-    background-color: cornflowerblue;
+    background-color: var(--blue-color);
 }
 
 .content {

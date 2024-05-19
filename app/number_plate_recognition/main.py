@@ -1,5 +1,4 @@
 import os
-import sys
 
 
 def run_plate_recognition():

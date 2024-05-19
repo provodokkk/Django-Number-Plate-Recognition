@@ -46,6 +46,35 @@
 }
 
 .small-image {
-    max-width: 50vw;
-    max-height: 50vh;
+    max-width: 45vw;
+    max-height: 45vh;
+}
+
+.download_bth {
+    width: 70vw;
+    margin: 3vh;
+    display: block;
+    align-items: center;
+
+    border-radius: 5px;
+    background-color: #ff5437;
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    border: none;
+    padding: 8px 16px;
+    font-size: 17px;
+}
+
+.download_bth:hover {
+    background-color: #3b5983;
+    transition: all 0.3s ease 0s;
+    cursor: pointer;
+}
+
+.table-frame {
+    border-radius: 5px;
+    border: 2px solid black;
+    width: 80vw;
+    padding: 2vh 0;
 }

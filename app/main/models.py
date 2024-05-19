@@ -13,4 +13,3 @@ class Plate(models.Model):
     plate_number = models.CharField(max_length=32, default='Error')
     accuracy = models.FloatField(default=0)
     processed_frame = models.FileField(upload_to='buffer/outputs', default=None)
-

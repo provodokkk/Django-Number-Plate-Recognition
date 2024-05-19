@@ -1,3 +1,46 @@
+:root {
+  --blue-color: #3b5983;
+  --hover-text-color: #ff5437;
+}
+
+.upload-container {
+    width: 50vw;
+    margin: 1vh auto 0;
+    align-items: center;
+    display: flex;
+    border-radius: 5px;
+    border: 2px solid black;
+}
+
+.choose-file {
+    width: 15vw;
+}
+
+.submit-btn {
+    width: 50vw;
+    margin: 1vh auto 0;
+    display: block;
+    align-items: center;
+}
+
+#file-name {
+    min-width: 35vw;
+    /*border-radius: 5px;*/
+    /*border: 2px solid black;*/
+    font-weight: bold;
+    padding: 6px 16px;
+    margin-left: 5px;
+    font-size: 17px;
+}
+
+.hidden {
+    display: none;
+}
+
+
+
+
+
 
 .black_btn {
     border-radius: 5px;
@@ -11,8 +54,9 @@
 }
 
 .black_btn:hover {
-    color: purple;
+    color: var(--hover-text-color);
     transition: all 0.3s ease 0s;
+    cursor: pointer;
 }
 
 
@@ -23,9 +67,6 @@
     height: 15vh;
 }
 
-.send_btn {
-    margin: 10px;
-}
 
 .files-list-item {
     padding: 2vh;

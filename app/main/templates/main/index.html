@@ -8,23 +8,25 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.css" integrity="sha512-7uSoC3grlnRktCWoO4LjHMjotq8gf9XDFQerPuaph+cqR7JC9XKGdvN+UwZMC14aAaBDItdRj3DcSDs4kMWUgg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.js" integrity="sha512-9e9rr82F9BPzG81+6UrwWLFj8ZLf59jnuIA/tIf8dEGoQVu7l5qvr02G/BiAabsFOYrIUTMslVN+iDYuszftVQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-{#    <div id="dropZone">#}
-{#      <form action="/file-upload" class="dropzone" id="my-great-dropzone"></form>#}
-{#    </div>#}
 
+    <form action="{% url 'index' %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="upload-container">
+{#            <div class="upload2">#}
+            <label for="id_uploaded_file" class="black_btn" style="border-radius: 0;">Choose File</label>
+            <span id="file-name">No file chosen</span>
+        <input type="file" id="id_uploaded_file" name="uploaded_file" class="hidden" onchange="updateFileName(this)">
+{#                </div>#}
+        </div>
+        <button type="submit" class="black_btn submit-btn">Submit</button>
+    </form>
 
-    <div id="dropZone">
-      <form action="{% url 'index' %}" method="POST" enctype="multipart/form-data" > {#    class="dropzone" id="my-great-dropzone"#}
-            {% csrf_token %}
-            {{ form }}
-            <p><button type="submit" class="black_btn send_btn">Send</button></p>
-        </form>
-    </div>
+    <br>
 
     <center>
         <form action="{% url 'results' %}" method="POST">
             {% csrf_token %}
-            <button type="submit" class="black_btn">Run</button>
+            <button type="submit" class="black_btn submit-btn" style="background-color: #3b5983">Run</button>
         </form>
     </center>
 

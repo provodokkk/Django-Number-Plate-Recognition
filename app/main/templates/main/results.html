@@ -4,75 +4,71 @@
 {% block content %}
     <link rel="stylesheet" href="{% static 'css/results.css' %}">
 
-
-{#    <td><img src="{{ plate.uploaded_file.url }}" alt="Uploaded" class="img-thumbnail"></td> #}
-{#    <td><img src="{{ plate.processed_file.url }}" alt="Processed" class="img-thumbnail"></td> #}
-{#    <td class="image-container">#}
-{#        <img src="{{ plate.uploaded_file.url }}" alt="Uploaded" class="small-image">#}
-{#        <img src="{{ plate.uploaded_file.url }}" alt="Uploaded" class="full-image">#}
-{#    </td>#}
-
-
     <center>
     <div class="card-body">
-<table>
-    <thead>
-        <tr>
-            <th>Uploaded</th>
-            <th>Processed</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            {% if file_type == 'image' %}
-                <td><img src="{{ file.uploaded_file.url }}" alt="Uploaded" class="small-image"></td>
-                <td><img src="{{ file.processed_file.url }}" alt="Processed" class="small-image"></td>
-            {% elif file_type == 'video' %}
-                <td>
-                    <video width="600" height="370" controls autoplay loop class="small-video">
-                        <source src="{{ file.uploaded_file.url }}" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                </td>
-                <td>
-                    <video width="600" height="370" controls autoplay loop class="small-video">
-                        <source src="{{ file.processed_file.url }}" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                </td>
-            {% endif %}
-        </tr>
-    </tbody>
-</table>
-
-
-        <table class="table table-bordered table-striped">
-            <thead>
-            <tr>
-                <th>Frame</th>
-                <th>Plate Number</th>
-                <th>Accuracy</th>
-            </tr>
-            </thead>
-            <tbody>
-                {% for plate in plates %}
+        <div class="table-frame">
+            <table>
+                <thead>
                     <tr>
-                        <td>
-                            <img src="{{ plate.processed_frame.url }}" alt="Processed" class="small-image">
-                        </td>
-                        <td>{{ plate.plate_number }}</td>
-
-                        {% if plate.accuracy > 75 %}
-                            <td style="background-color: green;">{{ plate.accuracy }} %</td>
-                        {% else %}
-                            <td style="background-color: red;">{{ plate.accuracy }} %</td>
+                        <th>Uploaded</th>
+                        <th>Processed</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        {% if file_type == 'image' %}
+                            <td><img src="{{ file.uploaded_file.url }}" alt="Uploaded" class="small-image"></td>
+                            <td><img src="{{ file.processed_file.url }}" alt="Processed" class="small-image"></td>
+                        {% elif file_type == 'video' %}
+                            <td>
+                                <video width="600" height="370" controls autoplay loop class="small-video">
+                                    <source src="{{ file.uploaded_file.url }}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            </td>
+                            <td>
+                                <video width="600" height="370" controls autoplay loop class="small-video">
+                                    <source src="{{ file.processed_file.url }}" type="video/mp4">
+                                    Your browser does not support the video tag.
+                                </video>
+                            </td>
                         {% endif %}
                     </tr>
-                {% endfor %}
-            </tbody>
+                </tbody>
+            </table>
+        </div>
 
-        </table>
+        <button href="{% url 'download_excel' file.id %}" class="download_bth">Download Excel</button>
+
+        <div class="table-frame">
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th>Frame</th>
+                    <th>Plate Number</th>
+                    <th>Accuracy</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {% for plate in plates %}
+                        <tr>
+                            <td>
+                                <img src="{{ plate.processed_frame.url }}" alt="Processed" class="small-image">
+                            </td>
+                            <td>{{ plate.plate_number }}</td>
+
+                            {% if plate.accuracy > 75 %}
+                                <td style="background-color: green;">{{ plate.accuracy }} %</td>
+                            {% else %}
+                                <td style="background-color: red;">{{ plate.accuracy }} %</td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
+
     </center>
 
 {% endblock content %}

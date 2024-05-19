@@ -1,4 +1,7 @@
 from django.shortcuts import render
+from django.http import HttpResponse
+from openpyxl import Workbook
+
 import os
 import re
 
@@ -97,3 +100,21 @@ def determine_file_type(file_url):
         return 'video'
     else:
         return None
+
+
+def download_excel(request, file_id):
+    wb = Workbook()
+    ws = wb.active
+    ws.append(['Frame Number', 'Plate Number', 'Accuracy %'])
+
+    processed_data = Plate.objects.filter(file_id=file_id)
+
+    for data in processed_data:
+        ws.append([data.frame_number, data.plate_number, data.accuracy])
+
+    # Save workbook to HttpResponse
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=processed_data.xlsx'
+    wb.save(response)
+
+    return response

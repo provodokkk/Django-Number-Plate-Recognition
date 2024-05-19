@@ -78,7 +78,3 @@ def move_all_files_to_constant_dirs():
     move_files(UPLOADS_DIR, UPLOADS_DIR_CONST)
     move_files(OUTPUTS_DIR, OUTPUTS_DIR_CONST)
     move_files(PROCESSED_FRAMES_DIR, PROCESSED_FRAMES_DIR_CONST)
-
-
-
-

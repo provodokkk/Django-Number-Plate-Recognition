@@ -67,7 +67,7 @@
 }
 
 .download_bth:hover {
-    background-color: #3b5983;
+    background-color: var(--blue-color);
     transition: all 0.3s ease 0s;
     cursor: pointer;
 }

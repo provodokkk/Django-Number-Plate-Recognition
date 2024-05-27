@@ -1,6 +1,7 @@
 :root {
-  --blue-color: #3b5983;
-  --hover-text-color: #ff5437;
+    --blue-color: #0163a0;
+    --black-color: #161616;
+    --hover-text-color: #ff5437;
 }
 
 * {
@@ -8,10 +9,11 @@
     margin: 0;
     padding: 0;
     background-color: aliceblue;
+    font-family: Arial, Helvetica, monospace;
 }
 
 body {
-    background-color: var(--blue-color);
+    background-color: aliceblue;
 }
 
 .logo-link {
@@ -22,7 +24,7 @@ body {
 .logo-img {
     height: 7vh;
     border-radius: 5px;
-    background-color: black;
+    background-color: var(--black-color);
     padding: 10px;
 }
 
@@ -31,6 +33,7 @@ header {
     justify-content: space-between;
     align-items: center;
     padding: 1% 5%;
+    margin: 0 0 3% 0;
     background-color: var(--blue-color);
 }
 
@@ -41,7 +44,7 @@ header {
 
 .nav_links li {
     display: inline-block;
-    padding: 0px 15px;
+    padding: 0 15px;
 }
 
 .nav_links li a:hover {
@@ -50,14 +53,14 @@ header {
 }
 
 .try_btn, .nav_links li a{
-    background-color: black;
+    background-color: var(--black-color);
     display: inline-block; /* Ensures the background covers the entire button */
     border-radius: 5px;
     overflow: hidden; /* Ensures the button doesn't overflow its parent */
 }
 
 .try_btn button, .nav_links li a {
-    background-color: black; /* Match parent's background color */
+    background-color: var(--black-color); /* Match parent's background color */
     color: white;
     font-weight: bold;
     text-decoration: none;
@@ -68,7 +71,7 @@ header {
 }
 
 .nav_item {
-    background-color: black;
+    background-color: var(--black-color);
     display: inline-block;
     border-radius: 5px;
 }
@@ -92,6 +95,7 @@ footer {
     justify-content: space-between;
     align-items: center;
     padding: 1% 5%;
+    margin:  3% 0 0 0;
     background-color: var(--blue-color);
 }
 

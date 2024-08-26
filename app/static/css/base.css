@@ -1,104 +1,111 @@
 :root {
-    --blue-color: #0163a0;
-    --black-color: #161616;
-    --hover-text-color: #ff5437;
+    --violet-color: #6212ec;
+    --ivory-color: #fffff0;
+
+    --black-color: #0e0d11;
+    --dark-grey-color: #1d1c20;
+
+    --dark-pink-color: #26111a;
+    --dark-pink-color-2: #452039;
+    --light-pink-color: #d00150;
+
+    --green-color: #009549;
+    --light-green-color: #50d001;
+    --dark-green-color: #101a09;
+    --dark-green-color-2: #1e290f;
+
+    --primary-font: 'Montserrat', Arial, Helvetica, sans-serif;
 }
 
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    background-color: aliceblue;
-    font-family: Arial, Helvetica, monospace;
+    background-color: var(--black-color);
+    font-family: var(--primary-font);
 }
 
 body {
-    background-color: aliceblue;
-}
-
-.logo-link {
-    display: inline-block;
-    background-color: var(--blue-color);
-}
-
-.logo-img {
-    height: 7vh;
-    border-radius: 5px;
     background-color: var(--black-color);
-    padding: 10px;
-}
-
-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1% 5%;
-    margin: 0 0 3% 0;
-    background-color: var(--blue-color);
-}
-
-.nav_links {
-    background-color: var(--blue-color);
-    list-style: none;
-}
-
-.nav_links li {
-    display: inline-block;
-    padding: 0 15px;
-}
-
-.nav_links li a:hover {
-    color: var(--hover-text-color);
-    transition: all 0.3s ease 0s;
-}
-
-.try_btn, .nav_links li a{
-    background-color: var(--black-color);
-    display: inline-block; /* Ensures the background covers the entire button */
-    border-radius: 5px;
-    overflow: hidden; /* Ensures the button doesn't overflow its parent */
-}
-
-.try_btn button, .nav_links li a {
-    background-color: var(--black-color); /* Match parent's background color */
-    color: white;
-    font-weight: bold;
-    text-decoration: none;
-    border: none;
-    padding: 8px 16px;
-    border-radius: inherit; /* Inherits border-radius from parent */
-    font-size: 17px;
-}
-
-.nav_item {
-    background-color: var(--black-color);
-    display: inline-block;
-    border-radius: 5px;
-}
-
-/*button {*/
-/*    padding: 9px 20px;*/
-/*    background-color: rgba(0, 135, 170, 1);*/
-/*    border: none;*/
-/*    border-radius: 10px;*/
-/*    cursor: pointer;*/
-/*    transition: all 0.3s ease 0s;*/
-/*}*/
-
-/*button:hover {*/
-/*    background-color: rgba(0, 135, 170, 0.7);*/
-/*}*/
-
-
-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1% 5%;
-    margin:  3% 0 0 0;
-    background-color: var(--blue-color);
 }
 
 .content {
     min-height: 90vh;
 }
+
+/*============ logo ============*/
+.logo-link {
+    display: flex;
+    border-radius: 5px;
+}
+
+.logo-img {
+    height: 5vh;
+    border-radius: 5px;
+}
+
+/* matching angles by the background color */
+img, .header-left, .header-left a, footer a {
+    background-color: var(--black-color);
+}
+
+/*============ logo ============*/
+
+
+/*============ header ============*/
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.7% 3%;
+    border-bottom: 2px solid var(--dark-grey-color);
+    background-color: var(--black-color);
+}
+/*============ header ============*/
+
+
+/*============ navbar buttons ============*/
+.nav-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background-color: var(--black-color);
+}
+
+.nav-links li {
+    display: inline-block;
+    padding: 0 15px;
+    border-radius: 5px;
+    background-color: var(--black-color)
+}
+
+.nav-links li a {
+    display: inline-block;
+    font-weight: bold;
+    text-decoration: none;
+    padding: 10px 15px;
+    font-size: 17px;
+    color: white;
+    background-color: var(--black-color);
+}
+
+/* Change background color on hover for list items and their links */
+.nav-links li:hover,
+.nav-links li:hover a {
+    background-color: var(--dark-grey-color);
+    transition: all 0.2s ease-in-out
+}
+/*============ navbar buttons ============*/
+
+
+/*============ footer ============*/
+footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1% 5%;
+    /*margin: 3% 0 0 0;*/
+    border-top: 2px solid var(--dark-grey-color);
+    background-color: var(--black-color);
+}
+/*============ footer ============*/

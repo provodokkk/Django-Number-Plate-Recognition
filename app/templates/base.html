@@ -11,16 +11,22 @@
 <body>
 
 <header>
-    <a href="{% url 'index' %}" class="logo-link">
-        <img src="{% static 'images/logo.png' %}" class="logo-img" alt="Logo">
-    </a>
-    <nav>
-        <ul class="nav_links">
-            <li class="nav_item"><a href="#" class="nav_link">About</a></li>
-            <li class="nav_item"><a href="#" class="nav_link">Contacts</a></li>
+    <div class="header-left">
+        <a href="{% url 'index' %}" class="logo-link">
+            <img src="{% static 'images/logo.png' %}" class="logo-img" alt="Voiture Logo">
+        </a>
+    </div>
+    <nav class="header-center">
+        <ul class="nav-links">
+            <li class="nav-item"><a href="#" class="nav-link">About</a></li>
+            <li class="nav-item"><a href="#" class="nav-link">Contacts</a></li>
         </ul>
     </nav>
-    <a href="{% url 'index' %}" class="try_btn"><button>Try Voiture</button></a>
+    <div class="header-right">
+        <ul class="nav-links">
+            <li class="nav-item"><a href="{% url 'index' %}" class="nav-link">Try Voiture</a></li>
+        </ul>
+    </div>
 </header>
 
 <div class="content">

@@ -1,68 +1,92 @@
-.upload-container {
-    width: 50vw;
-    margin: 1vh auto 0;
-    align-items: center;
-    display: flex;
-    border-radius: 5px;
-    border: 2px solid var(--black-color);
+.hidden {
+    display: none;
 }
+
+/*============ upload container ============*/
+.upload-container {
+    display: flex;
+    align-items: center;
+    width: 50vw;
+    margin: 5vh auto 0;
+    border-radius: 5px;
+    background-color: var(--dark-grey-color);
+}
+/*============ upload container ============*/
+
+
+/*============ buttons ============*/
+.btn {
+    display: block;
+    align-items: center;
+    width: 50vw;
+    border-radius: 5px;
+    background-color: var(--violet-color);
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    border: none;
+    padding: 10px 16px;
+    font-size: 17px;
+}
+
+/* Prevent right corners from being rounded */
+.choose-btn {
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+}
+
+.submit-btn {
+    margin: 1vh auto 0;
+    background-color: var(--dark-pink-color);
+    color: var(--light-pink-color);
+}
+
+.run-btn {
+    background-color: var(--dark-green-color);
+    color: var(--light-green-color);
+}
+
+.file-btn {
+    width: 30vw;
+}
+
+.btn:hover {
+    color: black;
+    background-color: var(--ivory-color);
+    cursor: pointer;
+    transition: all 0.2s ease-in-out
+}
+
+.submit-btn:hover {
+    color: var(--light-pink-color);
+    background-color: var(--dark-pink-color-2);
+    transition: all 0.2s ease-in-out;
+}
+
+.run-btn:hover {
+    color: var(--light-green-color);
+    background-color: var(--dark-green-color-2);
+    transition: all 0.2s ease-in-out;
+}
+/*============ buttons ============*/
 
 .choose-file {
     width: 15vw;
 }
 
-.submit-btn {
-    width: 50vw;
-    margin: 1vh auto 0;
-    display: block;
-    align-items: center;
-}
-
 #file-name {
     min-width: 35vw;
-    /*border-radius: 5px;*/
-    /*border: 2px solid black;*/
-    font-weight: bold;
+    color: white;
     padding: 6px 16px;
     margin-left: 5px;
     font-size: 17px;
-}
-
-.hidden {
-    display: none;
+    background-color: var(--dark-grey-color);
 }
 
 
-
-
-
-
-.black_btn {
-    border-radius: 5px;
-    background-color: var(--black-color);
-    color: white;
-    font-weight: bold;
-    text-decoration: none;
-    border: none;
-    padding: 8px 16px;
-    font-size: 17px;
-}
-
-.black_btn:hover {
-    color: var(--hover-text-color);
-    transition: all 0.3s ease 0s;
-    cursor: pointer;
-}
-
-
-#dropZone {
-    display: flex;
-    justify-content: center; /* Center horizontally */
-    align-items: center; /* Center vertically */
-    height: 15vh;
-}
-
-
+/*============ files list ============*/
 .files-list-item {
-    padding: 2vh;
+    padding: 1vh;
 }
+/*============ files list ============*/
+

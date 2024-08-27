@@ -1,11 +1,27 @@
-/* Add padding to table cells */
-.table-bordered td, .table-bordered th {
-    padding: 8px;
+
+/*============ tables ============*/
+.card-body {
+    padding: 5vh 0;
 }
 
-/* Alternate row colors */
-.table-striped tbody tr:nth-of-type(odd) {
-    background-color: #f9f9f9;
+thead {
+    color: white;
+}
+
+/* Adjust the spacing between the cells */
+table {
+    border-spacing: 1.5vw 1vh;
+}
+
+table, thead th, tbody tr td{
+    background-color: var(--dark-grey-color);
+}
+
+.table-frame {
+    border-radius: 7px;
+    width: 80vw;
+    padding: 3vh 0;
+    background-color: var(--dark-grey-color);
 }
 
 /* Center-align content within table cells */
@@ -13,68 +29,46 @@
     text-align: center;
 }
 
-
-.image-container {
-    position: relative;
-    width: 500px; /* Adjust as needed */
-    height: 500px; /* Adjust as needed */
-    overflow: hidden;
+.table-bordered td, .table-bordered th {
+    padding: 8px;
+    border-radius: 5px;
+    color: white;
+    background-color: var(--dark-grey-color);
 }
 
-/*.small-image {*/
-/*    width: 100%; !* Ensure the small image fills the container *!*/
-/*    height: auto; !* Maintain aspect ratio *!*/
-/*    transition: transform 0.3s ease; !* Add a smooth transition effect *!*/
-/*}*/
+/*============ tables ============*/
 
-.full-image {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: auto;
-    height: auto;
-    opacity: 0; /* Initially hidden */
-    transition: opacity 0.3s ease; /* Add a smooth transition effect */
-}
 
-.image-container:hover .image {
-    transform: scale(1.2); /* Scale up the small image on hover */
-}
-
-.image-container:hover .full-image {
-    opacity: 1; /* Show the full-size image on hover */
-}
-
+/*============ images ============*/
 .small-image {
-    max-width: 45vw;
-    max-height: 45vh;
+    max-width: 35vw;
+    height: auto;
+    border-radius: 5px;
 }
+/*============ images ============*/
 
-.download_bth {
+
+/*============ buttons ============*/
+
+.download-bth {
     width: 70vw;
     margin: 3vh;
     display: block;
     align-items: center;
 
     border-radius: 5px;
-    background-color: #ff5437;
     color: white;
     font-weight: bold;
     text-decoration: none;
-    border: none;
-    padding: 8px 16px;
+    padding: 2vh 16px;
     font-size: 17px;
+    background-color: var(--violet-color);
 }
 
-.download_bth:hover {
-    background-color: var(--blue-color);
-    transition: all 0.3s ease 0s;
+.download-bth:hover {
+    transition: all 0.2s ease-in-out;
     cursor: pointer;
+    color: black;
+    background-color: var(--ivory-color);
 }
-
-.table-frame {
-    border-radius: 5px;
-    border: 2px solid black;
-    width: 80vw;
-    padding: 2vh 0;
-}
+/*============ buttons ============*/

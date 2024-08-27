@@ -1,8 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
 :root {
     --violet-color: #6212ec;
     --ivory-color: #fffff0;
 
     --black-color: #0e0d11;
+    --grey-color: #737373;
     --dark-grey-color: #1d1c20;
 
     --dark-pink-color: #26111a;
@@ -14,7 +17,8 @@
     --dark-green-color: #101a09;
     --dark-green-color-2: #1e290f;
 
-    --primary-font: 'Montserrat', Arial, Helvetica, sans-serif;
+    /*--primary-font: 'Montserrat', Arial, Helvetica, sans-serif;*/
+    --primary-font: 'Inter', sans-serif;
 }
 
 * {
@@ -109,3 +113,22 @@ footer {
     background-color: var(--black-color);
 }
 /*============ footer ============*/
+
+
+/*============ icons ============*/
+.social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 2vw;
+    padding: 10px;
+}
+.social-icons a {
+    color: var(--grey-color);
+    font-size: 24px;
+    transition: color 0.3s;
+}
+.social-icons a:hover {
+    color: white;
+}
+/*============ icons ============*/
+

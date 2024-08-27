@@ -38,7 +38,7 @@
             </table>
         </div>
 
-        <a href="{% url 'download_excel' file.id %}" class="download_bth">Download Excel</a>
+        <a href="{% url 'download_excel' file.id %}" class="download-bth">Download Excel</a>
 
         <div class="table-frame">
             <table class="table table-bordered table-striped">
@@ -55,12 +55,12 @@
                             <td>
                                 <img src="{{ plate.processed_frame.url }}" alt="Processed" class="small-image">
                             </td>
-                            <td>{{ plate.plate_number }}</td>
+                            <td style="background-color: var(--dark-grey-color-2)">{{ plate.plate_number }}</td>
 
                             {% if plate.accuracy > 75 %}
-                                <td style="background-color: green;">{{ plate.accuracy }} %</td>
+                                <td style="background-color: var(--light-green-color);">{{ plate.accuracy }} %</td>
                             {% else %}
-                                <td style="background-color: red;">{{ plate.accuracy }} %</td>
+                                <td style="background-color: var(--light-pink-color);">{{ plate.accuracy }} %</td>
                             {% endif %}
                         </tr>
                     {% endfor %}

@@ -5,7 +5,7 @@
 }
 
 thead {
-    color: white;
+    color: var(--ivory-color);
 }
 
 /* Adjust the spacing between the cells */
@@ -32,7 +32,7 @@ table, thead th, tbody tr td{
 .table-bordered td, .table-bordered th {
     padding: 8px;
     border-radius: 5px;
-    color: white;
+    color: var(--ivory-color);
     background-color: var(--dark-grey-color);
 }
 
@@ -57,7 +57,7 @@ table, thead th, tbody tr td{
     align-items: center;
 
     border-radius: 5px;
-    color: white;
+    color: var(--ivory-color);
     font-weight: bold;
     text-decoration: none;
     padding: 2vh 16px;

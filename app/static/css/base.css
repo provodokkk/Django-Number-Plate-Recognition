@@ -2,18 +2,19 @@
 
 :root {
     --violet-color: #6212ec;
-    --ivory-color: #fffff0;
+    --dark-violet-color: #2f1a52;
 
-    --black-color: #0e0d11;
+    --ivory-color: #fffff0;
     --grey-color: #737373;
     --dark-grey-color: #1d1c20;
+    --black-color: #0a090d;
 
+    --light-pink-color: #d00150;
     --dark-pink-color: #26111a;
     --dark-pink-color-2: #452039;
-    --light-pink-color: #d00150;
 
-    --green-color: #009549;
     --light-green-color: #50d001;
+    --green-color: #009549;
     --dark-green-color: #101a09;
     --dark-green-color-2: #1e290f;
 
@@ -89,14 +90,14 @@ header {
     text-decoration: none;
     padding: 10px 15px;
     font-size: 17px;
-    color: white;
+    color: var(--ivory-color);
     background-color: var(--black-color);
 }
 
 /* Change background color on hover for list items and their links */
 .nav-links li:hover,
 .nav-links li:hover a {
-    background-color: var(--dark-grey-color);
+    background-color: var(--dark-violet-color);
     transition: all 0.2s ease-in-out
 }
 /*============ navbar buttons ============*/
@@ -108,7 +109,7 @@ footer {
     justify-content: space-between;
     align-items: center;
     padding: 1% 5%;
-    /*margin: 3% 0 0 0;*/
+    margin: 5% 0 0 0;
     border-top: 2px solid var(--dark-grey-color);
     background-color: var(--black-color);
 }
@@ -128,7 +129,7 @@ footer {
     transition: color 0.3s;
 }
 .social-icons a:hover {
-    color: white;
+    color: var(--ivory-color);
 }
 /*============ icons ============*/
 

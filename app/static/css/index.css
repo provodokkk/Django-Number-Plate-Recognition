@@ -2,11 +2,89 @@
     display: none;
 }
 
+/*============ hero section ============*/
+.hero-content {
+    width: 60vw;
+    margin: 0 auto;
+}
+
+.headline {
+    padding: 10vh 0 5vh 0;
+}
+
+.headline p {
+    font-size: 50px;
+    color: var(--ivory-color);
+    font-family: var(--primary-font);
+}
+/*============ hero section ============*/
+
+
+/*============ bento grid ============*/
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1vw;
+    width: 60vw;
+    padding: 5vh 0;
+    margin: 0 auto;
+}
+
+.grid-item {
+    background-color: #171717;
+    border-radius: 7px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 2vw;
+    height: 40vh;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s;
+}
+
+.lower-grid-item {
+    margin-top: 15vh;
+}
+
+.upper-grid-item {
+    margin-top: -15vh;
+}
+
+.grid-item:hover {
+    transform: scale(1.05);
+    background-color: var(--dark-violet-color);
+    transition: all 0.2s ease-in-out;
+}
+
+.grid-item:hover h2,
+.grid-item:hover p {
+    background: none;
+    color: var(--ivory-color);
+    transform: translateY(-2vh) scale(1.05);
+    transition: all 0.4s ease-in-out;
+}
+
+.grid-item h2 {
+    margin: 0;
+    font-size: 2rem;
+    background: none;
+    color: var(--ivory-color);
+}
+
+.grid-item p {
+    margin: 2vh 0 0;
+    font-size: 1rem;
+    background: none;
+    color: #bbbbbb;
+}
+/*============ bento grid ============*/
+
+
 /*============ upload container ============*/
 .upload-container {
     display: flex;
     align-items: center;
-    width: 50vw;
+    width: 60vw;
     margin: 5vh auto 0;
     border-radius: 5px;
     background-color: var(--dark-grey-color);
@@ -18,15 +96,19 @@
 .btn {
     display: block;
     align-items: center;
-    width: 50vw;
+    width: 60vw;
     border-radius: 5px;
     background-color: var(--violet-color);
-    color: white;
+    color: var(--ivory-color);
     font-weight: bold;
     text-decoration: none;
     border: none;
-    padding: 10px 16px;
+    padding: 0.5em 1em;
     font-size: 17px;
+}
+
+.start-btn {
+    /*background-color: var(--green-color);*/
 }
 
 /* Prevent right corners from being rounded */
@@ -75,8 +157,8 @@
 }
 
 #file-name {
-    min-width: 35vw;
-    color: white;
+    min-width: 40vw;
+    color: var(--ivory-color);
     padding: 6px 16px;
     margin-left: 5px;
     font-size: 17px;

@@ -5,6 +5,43 @@
     <link rel="stylesheet" href="{% static 'css/index.css' %}">
     <script src="{% static 'js/index.js' %}" defer></script>
 
+    <section class="hero">
+        <div class="hero-content">
+            <div class="headline">
+                <p>Unleash the</p>
+                <p >power of automation</p>
+            </div>
+            <button href="#" class="btn start-btn">Get Started</button>
+        </div>
+    </section>
+
+    <section class="bento-grid">
+        <div class="grid-item">
+            <h2>Seamless Detection</h2>
+            <p>Precise vehicle tracking with smooth performance</p>
+        </div>
+        <div class="grid-item lower-grid-item">
+            <h2>Accurate Recognition</h2>
+            <p>Reliable license plate identification</p>
+        </div>
+        <div class="grid-item">
+            <h2>Real-Time Processing</h2>
+            <p>Data processing for immediate results</p>
+        </div>
+        <div class="grid-item upper-grid-item">
+            <h2>Scalable Solution</h2>
+            <p>Adapts to your needs, big or small</p>
+        </div>
+        <div class="grid-item">
+            <h2>Easy Integration</h2>
+            <p>Effortlessly connects with your existing systems</p>
+        </div>
+        <div class="grid-item upper-grid-item">
+            <h2>Security Control</h2>
+            <p>Data protection is in your hands</p>
+        </div>
+    </section>
+
     <form action="{% url 'index' %}" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="upload-container">

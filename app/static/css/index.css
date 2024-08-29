@@ -1,6 +1,21 @@
+/*============ help ============*/
 .hidden {
     display: none;
 }
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin: 0;
+}
+
+.dividing-line {
+    margin-top: 10vh;
+    border-top: 2px solid var(--dark-grey-color);
+}
+/*============ help ============*/
+
 
 /*============ hero section ============*/
 .hero-content {
@@ -23,16 +38,17 @@
 /*============ bento grid ============*/
 .bento-grid {
     display: grid;
+    justify-content: center;
     grid-template-columns: repeat(3, 1fr);
     gap: 1vw;
     width: 60vw;
-    padding: 5vh 0;
+    padding: 5vh 0 0 0;
     margin: 0 auto;
 }
 
 .grid-item {
     background-color: #171717;
-    border-radius: 7px;
+    border-radius: 10px;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
@@ -73,14 +89,52 @@
 
 .grid-item p {
     margin: 2vh 0 0;
-    font-size: 1rem;
+    font-size: 1.2rem;
     background: none;
-    color: #bbbbbb;
+    color: var(--grey-color);
 }
 /*============ bento grid ============*/
 
 
-/*============ upload container ============*/
+/*============ example ============*/
+.example-card {
+    width: 60vw;
+    min-height: 50vh;
+    display: flex;
+    align-items: center;
+    margin: 10vh 0;
+    border-radius: 10px;
+    color: var(--ivory-color);
+    background-color: var(--dark-grey-color);
+}
+
+.example-card .example-img {
+    flex: 1; /* Allow this element to grow and take up remaining space */
+    margin: 5vh;
+    height: 40vh;
+    border-radius: 10px;
+    background-color: var(--grey-color);
+}
+
+.example-card .arrow-img {
+    height: 5vh;
+    flex: 0 0 10%; /* Fixed width of 10% of the card's width */
+    border-radius: 10px;
+    background-color: var(--grey-color);
+}
+/*============ example ============*/
+
+
+/*============ upload form ============*/
+#file-name {
+    min-width: 40vw;
+    color: var(--ivory-color);
+    padding: 6px 16px;
+    margin-left: 5px;
+    font-size: 17px;
+    background-color: var(--dark-grey-color);
+}
+
 .upload-container {
     display: flex;
     align-items: center;
@@ -89,10 +143,10 @@
     border-radius: 5px;
     background-color: var(--dark-grey-color);
 }
-/*============ upload container ============*/
+/*============ upload form ============*/
 
 
-/*============ buttons ============*/
+/*============ main buttons ============*/
 .btn {
     display: block;
     align-items: center;
@@ -107,23 +161,14 @@
     font-size: 17px;
 }
 
-.start-btn {
-    /*background-color: var(--green-color);*/
-}
-
-/* Prevent right corners from being rounded */
-.choose-btn {
-    border-top-right-radius: 0 !important;
-    border-bottom-right-radius: 0 !important;
-}
-
 .submit-btn {
-    margin: 1vh auto 0;
+    margin: 2vh auto 0;
     background-color: var(--dark-pink-color);
     color: var(--light-pink-color);
 }
 
 .run-btn {
+    margin: 2vh auto 0;
     background-color: var(--dark-green-color);
     color: var(--light-green-color);
 }
@@ -133,42 +178,106 @@
 }
 
 .btn:hover {
-    color: black;
-    background-color: var(--ivory-color);
+    color: var(--ivory-color);
+    background-color: var(--dark-violet-color);
     cursor: pointer;
     transition: all 0.2s ease-in-out
 }
 
-.submit-btn:hover {
-    color: var(--light-pink-color);
-    background-color: var(--dark-pink-color-2);
-    transition: all 0.2s ease-in-out;
-}
+/*.submit-btn:hover {*/
+/*    color: var(--light-pink-color);*/
+/*    background-color: var(--dark-pink-color-2);*/
+/*    transition: all 0.2s ease-in-out;*/
+/*}*/
 
-.run-btn:hover {
-    color: var(--light-green-color);
-    background-color: var(--dark-green-color-2);
-    transition: all 0.2s ease-in-out;
-}
-/*============ buttons ============*/
+/*.run-btn:hover {*/
+/*    color: var(--light-green-color);*/
+/*    background-color: var(--dark-green-color-2);*/
+/*    transition: all 0.2s ease-in-out;*/
+/*}*/
+/*============ main buttons ============*/
 
-.choose-file {
-    width: 15vw;
-}
 
-#file-name {
-    min-width: 40vw;
-    color: var(--ivory-color);
-    padding: 6px 16px;
-    margin-left: 5px;
-    font-size: 17px;
+/*============ files list ============*/
+.files-list-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 60vw;
+    min-height: 30vh;
+    padding: 5vh 0;
+    margin-top: 10vh;
+    border-radius: 10px;
     background-color: var(--dark-grey-color);
 }
 
+.files-list {
+    list-style-type: none;
+    background: none;
+}
 
-/*============ files list ============*/
+.files-list-container h2 {
+    padding-bottom: 3vh;
+    color: var(--ivory-color);
+    background: none;
+}
+
 .files-list-item {
     padding: 1vh;
+    background: none;
 }
 /*============ files list ============*/
 
+
+/*============ contact card ============*/
+
+.contact-card {
+    width: 80vw;
+    min-height: 50vh;
+    display: flex;
+    gap: 4vw;
+    margin-top: 10vh;
+    border-radius: 10px;
+    color: var(--ivory-color);
+    background-color: var(--dark-grey-color);
+}
+
+.column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--dark-grey-color);
+}
+
+.contact-card-text {
+    background-color: var(--dark-grey-color);
+}
+
+.contact-card:first-child {
+    padding: 4vw;
+    justify-content: space-between;
+}
+
+.contact-card:first-child h2 {
+    font-size: 2rem;
+    margin: 0;
+    padding-bottom: 3vh;
+}
+
+.contact-card:first-child p {
+    font-size: 1.1rem;
+    padding-bottom: 3vh;
+    color: var(--grey-color);
+}
+
+.contact-card .column:last-child {
+    border-radius: 10px;
+    background-color: var(--grey-color);
+}
+
+.email-btn {
+    width: 100%;
+    align-self: flex-start;
+    margin-top: auto;
+}
+/*============ contact card ============*/

@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
 
+html {
+    scroll-behavior: smooth;
+}
+
 :root {
     --violet-color: #6212ec;
     --dark-violet-color: #2f1a52;
@@ -18,7 +22,6 @@
     --dark-green-color: #101a09;
     --dark-green-color-2: #1e290f;
 
-    /*--primary-font: 'Montserrat', Arial, Helvetica, sans-serif;*/
     --primary-font: 'Inter', sans-serif;
 }
 

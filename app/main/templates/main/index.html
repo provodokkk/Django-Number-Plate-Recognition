@@ -5,13 +5,13 @@
     <link rel="stylesheet" href="{% static 'css/index.css' %}">
     <script src="{% static 'js/index.js' %}" defer></script>
 
-    <section class="hero">
+    <section id="hero-section" class="hero">
         <div class="hero-content">
             <div class="headline">
                 <p>Unleash the</p>
                 <p >power of automation</p>
             </div>
-            <button href="#" class="btn start-btn">Get Started</button>
+            <button class="btn start-btn scrollButton" data-target="#example-section">Get Started</button>
         </div>
     </section>
 
@@ -21,24 +21,35 @@
             <p>Precise vehicle tracking with smooth performance</p>
         </div>
         <div class="grid-item lower-grid-item">
+
+            <h2>Easy Integration</h2>
+            <p>Effortlessly connects with your existing systems</p>
+        </div>
+        <div class="grid-item">
             <h2>Accurate Recognition</h2>
             <p>Reliable license plate identification</p>
         </div>
-        <div class="grid-item">
+        <div class="grid-item upper-grid-item">
             <h2>Real-Time Processing</h2>
             <p>Data processing for immediate results</p>
         </div>
-        <div class="grid-item upper-grid-item">
+        <div class="grid-item">
             <h2>Scalable Solution</h2>
             <p>Adapts to your needs, big or small</p>
-        </div>
-        <div class="grid-item">
-            <h2>Easy Integration</h2>
-            <p>Effortlessly connects with your existing systems</p>
         </div>
         <div class="grid-item upper-grid-item">
             <h2>Security Control</h2>
             <p>Data protection is in your hands</p>
+        </div>
+    </section>
+
+    <div class="dividing-line"></div>
+
+    <section id="example-section" class="center">
+        <div class="example-card">
+            <div class="column example-img"></div>
+            <div class="column arrow-img"></div>
+            <div class="column example-img"></div>
         </div>
     </section>
 
@@ -53,28 +64,38 @@
         <button type="submit" class="btn submit-btn">Submit</button>
     </form>
 
-    <br>
-
-    <center>
+    <section class="center">
         <form action="{% url 'results' %}" method="POST">
             {% csrf_token %}
             <button type="submit" class="btn run-btn">Run</button>
         </form>
-    </center>
+    </section>
 
-    <br>
-    <br>
+    <section class="center">
+        <div class="files-list-container">
+            <h2>Processed files</h2>
+            <ul class="files-list">
+                {% for file in files %}
+                <li class="files-list-item">
+                    <a href="{% url 'results' file.id %}" class="btn file-btn">File {{ file.id }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
 
-    <center>
-        <h2 style="color: white">List of Files</h2>
-        <ul class="files-list">
-            {% for file in files %}
-            <li class="files-list-item">
-                <a href="{% url 'results' file.id %}" class="btn file-btn">File {{ file.id }}</a>
-            </li>
-            {% endfor %}
-        </ul>
-    </center>
+    <div class="dividing-line"></div>
+
+    <section class="center">
+        <div id="contact-card" class="contact-card">
+            <div class="column column-text">
+                <h2 class="contact-card-text">How can we help you?</h2>
+                <p class="contact-card-text">If you have any questions or need assistance, feel free to reach out to us.</p>
+                <button id="emailButton" class="btn email-btn">Write an Email</button>
+            </div>
+            <div class="column"></div>
+        </div>
+    </section>
 
 
 {% endblock content %}

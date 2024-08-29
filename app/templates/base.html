@@ -19,13 +19,15 @@
     </div>
     <nav class="header-center">
         <ul class="nav-links">
-            <li class="nav-item"><a href="#" class="nav-link">About</a></li>
-            <li class="nav-item"><a href="#" class="nav-link">Contacts</a></li>
+            <li class="nav-item"><a class="nav-link scrollButton" href="{% url 'index' %}#hero-section">About</a></li>
+            <li class="nav-item"><a class="nav-link scrollButton" href="{% url 'index' %}#contact-card">Contacts</a></li>
         </ul>
     </nav>
     <div class="header-right">
         <ul class="nav-links">
-            <li class="nav-item"><a href="{% url 'index' %}" class="nav-link">Try Voiture</a></li>
+            <li class="nav-item">
+                <a class="nav-link scrollButton" href="{% url 'index' %}#example-section">Try Voiture</a>
+            </li>
         </ul>
     </div>
 </header>

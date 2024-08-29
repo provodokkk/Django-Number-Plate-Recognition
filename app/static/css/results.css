@@ -18,7 +18,7 @@ table, thead th, tbody tr td{
 }
 
 .table-frame {
-    border-radius: 7px;
+    border-radius: 10px;
     width: 80vw;
     padding: 3vh 0;
     background-color: var(--dark-grey-color);
@@ -26,12 +26,13 @@ table, thead th, tbody tr td{
 
 /* Center-align content within table cells */
 .table tbody td {
+    min-width: 7vw;
     text-align: center;
 }
 
 .table-bordered td, .table-bordered th {
     padding: 8px;
-    border-radius: 5px;
+    border-radius: 10px;
     color: var(--ivory-color);
     background-color: var(--dark-grey-color);
 }
@@ -43,7 +44,7 @@ table, thead th, tbody tr td{
 .small-image {
     max-width: 35vw;
     height: auto;
-    border-radius: 5px;
+    border-radius: 10px;
 }
 /*============ images ============*/
 

@@ -1,12 +1,12 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.shortcuts import render, redirect
+from django.http import HttpResponse, HttpResponseRedirect
 from openpyxl import Workbook
 
 import os
 import re
 
 from main.forms import UploadFileForm
-from main.models import File, Plate
+from main.models import Files, Plates
 
 from number_plate_recognition import main
 from number_plate_recognition.paths import INTERPOLATED_CSV_FILE_PATH, get_output_file_info
@@ -16,61 +16,57 @@ from number_plate_recognition.visualize import get_plates_with_highest_score
 
 
 def index(request):
+    return render(request, 'main/index.html', {'files': Files.objects.all()})
+
+
+def get_processed_file(request, file_id=None):
+    if file_id is None:
+        return HttpResponseRedirect('/')
+
+    file = Files.objects.get(pk=file_id)
+    context = {
+        'file': file,
+        'file_type': determine_file_type(file.processed_file.name),
+        'plates': Plates.objects.filter(file_id=file.id),
+    }
+    return render(request, 'main/results.html', context)
+
+
+def process_file(request):
     if request.method == 'POST':
         clear_buffer_directories()
 
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
-            fp = File(uploaded_file=form.cleaned_data['uploaded_file'])
+            # Save the uploaded file
+            fp = Files(uploaded_file=form.cleaned_data['uploaded_file'])
             fp.save()
-    else:
-        form = UploadFileForm()
 
-    context = {
-        'form': form,
-        'files': File.objects.all()
-    }
+            # Process the file
+            main.run_plate_recognition()
 
-    return render(request, 'main/index.html', context)
+            # Update processed file path to the table
+            processed_file = get_output_file_info()
+            fp.processed_file = os.path.join('buffer', 'outputs', processed_file['name'])
+            fp.save()
 
+            # Handle plate data
+            processed_frames = get_all_processed_frame_files_info()
+            plates_with_highest_score_data = get_plates_with_highest_score(INTERPOLATED_CSV_FILE_PATH)
 
-def get_processed_file(request, file_id=None):
-    if file_id is not None:
-        file = File.objects.get(pk=file_id)
-        file_type = determine_file_type(file.processed_file.name)
-        plates = Plate.objects.filter(file_id=file.id)
-    else:
-        main.run_plate_recognition()
-        file = File.objects.last()
+            for plate, frame in zip(plates_with_highest_score_data, processed_frames):
+                accuracy = round(float(plate['license_number_score']) * 100, 2)
+                new_plate = Plates(file_id=fp.id, frame_number=plate['frame_number'], plate_number=plate['license_number'],
+                                  accuracy=accuracy, processed_frame=f"buffer/processed_frames/{frame['name']}")
+                new_plate.save()
 
-        # update processed file path to the table
-        processed_file = get_output_file_info()
-        file.processed_file = os.path.join('buffer', 'outputs', processed_file['name'])
-        file.save()
+            move_all_files_to_constant_dirs()
+            update_paths_in_database(fp)
 
-        file_type = determine_file_type(processed_file['name'])
+            # Redirect to results page with the newly processed file ID
+            return redirect('results', file_id=fp.id)
 
-        processed_frames = get_all_processed_frame_files_info()
-        plates_with_highest_score_data = get_plates_with_highest_score(INTERPOLATED_CSV_FILE_PATH)
-
-        for plate, frame in zip(plates_with_highest_score_data, processed_frames):
-            accuracy = round(float(plate['license_number_score']) * 100, 2)
-            new_plate = Plate(file_id=file.id, frame_number=plate['frame_number'], plate_number=plate['license_number'],
-                              accuracy=accuracy, processed_frame=f"buffer/processed_frames/{frame['name']}")
-            new_plate.save()
-
-        last_plate = Plate.objects.last()
-        plates = Plate.objects.filter(file_id=last_plate.file_id)
-
-        move_all_files_to_constant_dirs()
-        update_paths_in_database(file)
-
-    context = {
-        'file': file,
-        'file_type': file_type,
-        'plates': plates,
-    }
-    return render(request, 'main/results.html', context)
+    return render(request, 'main/index.html', {'form': UploadFileForm()})
 
 
 def remove_buffer_directory(path: str):
@@ -86,7 +82,7 @@ def update_paths_in_database(file):
     file.save()
 
     file_id = file.id
-    plates = Plate.objects.filter(file_id=file_id)
+    plates = Plates.objects.filter(file_id=file_id)
     for plate in plates:
         plate.processed_frame = remove_buffer_directory(str(plate.processed_frame))
         plate.save()
@@ -107,7 +103,7 @@ def download_excel(request, file_id):
     ws = wb.active
     ws.append(['Frame Number', 'Plate Number', 'Accuracy %'])
 
-    processed_data = Plate.objects.filter(file_id=file_id)
+    processed_data = Plates.objects.filter(file_id=file_id)
 
     for data in processed_data:
         ws.append([data.frame_number, data.plate_number, data.accuracy])

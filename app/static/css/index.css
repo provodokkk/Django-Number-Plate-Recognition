@@ -175,24 +175,6 @@ form, .main-section section {
     font-size: 17px;
 }
 
-.submit-btn {
-    width: 50vw;
-    margin: 2vh auto 0;
-    background-color: var(--dark-pink-color);
-    color: var(--light-pink-color);
-}
-
-.run-btn {
-    width: 50vw;
-    margin: 2vh auto 0;
-    background-color: var(--dark-green-color);
-    color: var(--light-green-color);
-}
-
-.file-btn {
-    width: 15vw;
-}
-
 .btn:hover {
     color: var(--ivory-color);
     background-color: var(--dark-violet-color);
@@ -200,17 +182,49 @@ form, .main-section section {
     transition: all 0.2s ease-in-out
 }
 
-/*.submit-btn:hover {*/
-/*    color: var(--light-pink-color);*/
-/*    background-color: var(--dark-pink-color-2);*/
-/*    transition: all 0.2s ease-in-out;*/
-/*}*/
+.start-btn {
+    background-color: var(--dark-violet-color);
+    border: 2px solid transparent;
+    border-image-slice: 1;
+    animation: border-animation 4s infinite ease-in-out;
+}
 
-/*.run-btn:hover {*/
-/*    color: var(--light-green-color);*/
-/*    background-color: var(--dark-green-color-2);*/
-/*    transition: all 0.2s ease-in-out;*/
-/*}*/
+.start-btn:hover {
+    transform: translateY(-5px) scale(1.05);
+    transition: all 0.4s ease-in-out;
+}
+
+.process-btn {
+    width: 50vw;
+    margin: 2vh auto 0;
+    color: var(--light-green-color);
+    background-color: var(--dark-violet-color);
+    border-top: 2px solid var(--dark-violet-color);
+
+    border-radius: 5px;
+    border: 2px solid transparent;
+    border-image-slice: 1;
+}
+
+.process-btn:hover {
+    color: var(--light-green-color);
+    animation: border-animation 4s infinite ease-in-out;
+}
+
+.file-btn {
+    width: 35vw;
+}
+
+@keyframes border-animation {
+    0%, 100% {
+        border-color: var(--violet-color);
+        box-shadow: 0 0 10px var(--violet-color);
+    }
+    50% {
+        border-color: var(--dark-violet-color);
+        box-shadow: 0 0 10px var(--dark-violet-color);
+    }
+}
 /*============ main buttons ============*/
 
 

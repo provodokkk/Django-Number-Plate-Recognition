@@ -10,7 +10,8 @@ html {
 
     --ivory-color: #fffff0;
     --grey-color: #737373;
-    --dark-grey-color: #1d1c20;
+    --dark-grey-color: #171717;
+    --dark-grey-color-2: #1d1c20;
     --black-color: #0a090d;
 
     --light-pink-color: #d00150;
@@ -135,4 +136,3 @@ footer {
     color: var(--ivory-color);
 }
 /*============ icons ============*/
-

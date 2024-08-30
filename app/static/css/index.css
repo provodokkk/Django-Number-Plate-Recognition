@@ -47,13 +47,14 @@
 }
 
 .grid-item {
-    background-color: #171717;
+    background-color: var(--dark-grey-color);
     border-radius: 10px;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
     padding: 2vw;
     height: 40vh;
+    border: 2px solid var(--dark-grey-color-2);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     transition: transform 0.2s;
 }
@@ -98,50 +99,62 @@
 
 /*============ example ============*/
 .example-card {
-    width: 60vw;
+    min-width: 60vw;
     min-height: 50vh;
     display: flex;
     align-items: center;
     margin: 10vh 0;
     border-radius: 10px;
     color: var(--ivory-color);
+    border: 2px solid var(--dark-grey-color-2);
     background-color: var(--dark-grey-color);
 }
 
 .example-card .example-img {
     flex: 1; /* Allow this element to grow and take up remaining space */
     margin: 5vh;
-    height: 40vh;
+    max-height: 40vh;
     border-radius: 10px;
-    background-color: var(--grey-color);
 }
 
 .example-card .arrow-img {
     height: 5vh;
-    flex: 0 0 10%; /* Fixed width of 10% of the card's width */
-    border-radius: 10px;
-    background-color: var(--grey-color);
+    flex: 0 10;
+    padding: 0 2vw;
 }
 /*============ example ============*/
 
 
 /*============ upload form ============*/
+.main-section {
+    width: 60vw;
+    margin: 0 auto;
+    padding: 5vh 0;
+    border-radius: 10px;
+    border: 2px solid var(--dark-grey-color-2);
+    background-color: var(--dark-grey-color);
+}
+
+form, .main-section section {
+    background: none;
+}
+
 #file-name {
-    min-width: 40vw;
+    min-width: 35vw;
     color: var(--ivory-color);
     padding: 6px 16px;
     margin-left: 5px;
     font-size: 17px;
-    background-color: var(--dark-grey-color);
+    background-color: var(--grey-color);
 }
 
 .upload-container {
     display: flex;
     align-items: center;
-    width: 60vw;
-    margin: 5vh auto 0;
+    width: 50vw;
+    margin: 0 auto;
     border-radius: 5px;
-    background-color: var(--dark-grey-color);
+    background-color: var(--grey-color);
 }
 /*============ upload form ============*/
 
@@ -150,6 +163,7 @@
 .btn {
     display: block;
     align-items: center;
+    text-align: center;
     width: 60vw;
     border-radius: 5px;
     background-color: var(--violet-color);
@@ -162,19 +176,21 @@
 }
 
 .submit-btn {
+    width: 50vw;
     margin: 2vh auto 0;
     background-color: var(--dark-pink-color);
     color: var(--light-pink-color);
 }
 
 .run-btn {
+    width: 50vw;
     margin: 2vh auto 0;
     background-color: var(--dark-green-color);
     color: var(--light-green-color);
 }
 
 .file-btn {
-    width: 30vw;
+    width: 15vw;
 }
 
 .btn:hover {
@@ -208,6 +224,7 @@
     padding: 5vh 0;
     margin-top: 10vh;
     border-radius: 10px;
+    border: 2px solid var(--dark-grey-color-2);
     background-color: var(--dark-grey-color);
 }
 
@@ -239,6 +256,7 @@
     margin-top: 10vh;
     border-radius: 10px;
     color: var(--ivory-color);
+    border: 2px solid var(--dark-grey-color-2);
     background-color: var(--dark-grey-color);
 }
 

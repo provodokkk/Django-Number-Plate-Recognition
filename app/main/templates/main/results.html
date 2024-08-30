@@ -21,13 +21,13 @@
                             <td><img src="{{ file.processed_file.url }}" alt="Processed" class="small-image"></td>
                         {% elif file_type == 'video' %}
                             <td>
-                                <video width="600" height="370" controls autoplay loop class="small-video">
+                                <video  controls autoplay loop class="small-video">
                                     <source src="{{ file.uploaded_file.url }}" type="video/mp4">
                                     Your browser does not support the video tag.
                                 </video>
                             </td>
                             <td>
-                                <video width="600" height="370" controls autoplay loop class="small-video">
+                                <video controls autoplay loop class="small-video">
                                     <source src="{{ file.processed_file.url }}" type="video/mp4">
                                     Your browser does not support the video tag.
                                 </video>
@@ -38,14 +38,14 @@
             </table>
         </div>
 
-        <a href="{% url 'download_excel' file.id %}" class="download-bth">Download Excel</a>
+        <a href="{% url 'download_excel' file.id %}" class="download-bth">Download data</a>
 
         <div class="table-frame">
             <table class="table table-bordered table-striped">
                 <thead>
                 <tr>
                     <th>Frame</th>
-                    <th>Plate Number</th>
+                    <th>Plate number</th>
                     <th>Accuracy</th>
                 </tr>
                 </thead>
@@ -55,7 +55,7 @@
                             <td>
                                 <img src="{{ plate.processed_frame.url }}" alt="Processed" class="small-image">
                             </td>
-                            <td style="background-color: var(--grey-color)">{{ plate.plate_number }}</td>
+                            <td class="recognized-plate-number">{{ plate.plate_number }}</td>
 
                             {% if plate.accuracy > 75 %}
                                 <td style="background-color: var(--light-green-color);">{{ plate.accuracy }} %</td>

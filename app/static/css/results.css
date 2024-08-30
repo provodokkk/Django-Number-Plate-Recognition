@@ -13,8 +13,12 @@ table {
     border-spacing: 1.5vw 1vh;
 }
 
-table, thead th, tbody tr td{
+table, thead th {
     background-color: var(--dark-grey-color);
+}
+
+tbody tr .recognized-plate-number {
+    background-color: var(--grey-color);
 }
 
 .table-frame {
@@ -36,7 +40,6 @@ table, thead th, tbody tr td{
     color: var(--ivory-color);
     background-color: var(--dark-grey-color);
 }
-
 /*============ tables ============*/
 
 
@@ -45,8 +48,20 @@ table, thead th, tbody tr td{
     max-width: 35vw;
     height: auto;
     border-radius: 10px;
+    background: none;
+    border: 2px solid var(--dark-grey-color-2);
 }
 /*============ images ============*/
+
+
+/*============ videos ============*/
+.small-video {
+    max-width: 600px;
+    max-height: 370px;
+    border-radius: 10px;
+    background: none;
+}
+/*============ videos ============*/
 
 
 /*============ buttons ============*/
@@ -69,7 +84,7 @@ table, thead th, tbody tr td{
 .download-bth:hover {
     transition: all 0.2s ease-in-out;
     cursor: pointer;
-    color: black;
+    color: var(--dark-grey-color);
     background-color: var(--ivory-color);
 }
 /*============ buttons ============*/

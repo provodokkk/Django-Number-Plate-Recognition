@@ -47,29 +47,33 @@
 
     <section id="example-section" class="center">
         <div class="example-card">
-            <div class="column example-img"></div>
-            <div class="column arrow-img"></div>
-            <div class="column example-img"></div>
+            <img src="{% static 'images/initial_example.png' %}" class="column example-img">
+            <img src="{% static 'images/arrow.png' %}" class="column arrow-img">
+            <img src="{% static 'images/processed_example.png' %}" class="column example-img">
         </div>
     </section>
 
-    <form action="{% url 'index' %}" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="upload-container">
-            <label for="id_uploaded_file" class="btn choose-btn">Choose File</label>
-            <span id="file-name">No file chosen</span>
-            <input type="file" id="id_uploaded_file" name="uploaded_file" class="hidden" onchange="updateFileName(this)">
-        </div>
-
-        <button type="submit" class="btn submit-btn">Submit</button>
-    </form>
-
-    <section class="center">
-        <form action="{% url 'results' %}" method="POST">
+    <div class="main-section">
+        <form action="{% url 'index' %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            <button type="submit" class="btn run-btn">Run</button>
+            <div class="upload-container">
+                <label for="id_uploaded_file" class="btn choose-btn">Choose File</label>
+                <span id="file-name">No file chosen</span>
+                <input type="file" id="id_uploaded_file" name="uploaded_file" class="hidden" onchange="updateFileName(this)">
+            </div>
+
+            <button type="submit" class="btn submit-btn">Submit</button>
         </form>
-    </section>
+
+        <section class="center">
+            <form action="{% url 'results' %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn run-btn">Run</button>
+            </form>
+        </section>
+    </div>
+
+    <div class="dividing-line"></div>
 
     <section class="center">
         <div class="files-list-container">
